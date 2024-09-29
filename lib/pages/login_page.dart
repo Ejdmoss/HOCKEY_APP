@@ -61,15 +61,21 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.only(left: 25.0, right: 25.0),
               child: Image.asset(
                 'lib/images/ehl.png',
-                height: 175,
+                height: 150,
               ),
             ),
             // Úvodní zpráva, název aplikace.
-            Text(
-              "Hockey app",
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.inversePrimary),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: Text(
+                "Hockey app",
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontWeight: FontWeight.bold,
+                    ),
+                    
+              ),
             ),
             const SizedBox(height: 10),
             // Pole pro zadání emailu.

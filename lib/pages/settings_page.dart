@@ -62,300 +62,99 @@ class SettingsPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255, 255, 204, 0),
-                    Color.fromARGB(255, 0, 0, 0),
-                  ]),
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text(
-                  "Litvínov",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                )),
+              Image.asset(
+                'lib/images/litvinov.png',
+                height: 50,
               ),
               const SizedBox(width: 10),
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255, 238,27,42),
-                    Color.fromARGB(255, 255, 255, 255),
-                  ]),
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text("Pardubice",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15))),
+              Image.asset(
+                'lib/images/pardubice.png',
+                height: 50,
               ),
-              const SizedBox(height: 60),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255, 21, 119, 64),
-                    Color.fromARGB(255, 0, 0, 0),
-                  ]),
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text(
-                  "Mladá Boleslav",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                )),
+              Image.asset(
+                'lib/images/mladabol.png',
+                height: 50,
               ),
               const SizedBox(width: 10),
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255,117,1,38),
-                    Color.fromARGB(255, 255, 255, 255),
-                  ]),
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text("Sparta Praha",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15))),
+              Image.asset(
+                'lib/images/sparta.png',
+                height: 50,
               ),
-              const SizedBox(height: 60)
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255,49,70,117),
-                    Color.fromARGB(255,255,255,255),
-                  ]),
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text(
-                  "Vítkovice",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                )),
+              Image.asset(
+                'lib/images/vitkovice.png',
+                height: 50,
               ),
               const SizedBox(width: 10),
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255, 0, 0, 0),
-                    Color.fromARGB(255, 255, 255, 255),
-                  ]),
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text("Kladno",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15))),
+              Image.asset(
+                'lib/images/kladno.png',
+                height: 50,
               ),
-              const SizedBox(height: 60)
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255,117,1,38),
-                    Color.fromARGB(255, 255, 255, 255),
-                  ]),
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text(
-                  "České Budějovice",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                )),
+              Image.asset(
+                'lib/images/ceskebudej.png',
+                height: 50,
               ),
               const SizedBox(width: 10),
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255,164,35,39),
-                    Color.fromARGB(255,218,205,198),
-                  ]),
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text("Třinec",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15))),
+              Image.asset(
+                'lib/images/trinecek.png',
+                height: 50,
               ),
-              const SizedBox(height: 60)
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255,33,48,71),
-                    Color.fromARGB(255,255,255,255),
-                  ]),
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text(
-                  "Liberec",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                )),
+              Image.asset(
+                'lib/images/liberec.png',
+                height: 50,
               ),
               const SizedBox(width: 10),
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255, 56, 54, 61),
-                    Color.fromARGB(255,255,255,255),
-                  ]),
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text("Karlovy Vary",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15))),
+              Image.asset(
+                'lib/images/karlovyvary.png',
+                height: 50,
               ),
-              const SizedBox(height: 60)
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text(
-                  "Olomouc",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                )),
+              Image.asset(
+                'lib/images/olomouc.png',
+                height: 50,
               ),
               const SizedBox(width: 10),
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text("Kometa Brno",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.inversePrimary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15))),
+              Image.asset(
+                'lib/images/brno.png',
+                height: 50,
               ),
-              const SizedBox(height: 60)
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text(
-                  "Plzeň",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                )),
+              Image.asset(
+                'lib/images/plzen.png',
+                height: 50,
               ),
               const SizedBox(width: 10),
-              Container(
-                width: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                    child: Text("Mountfield HK",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.inversePrimary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15))),
+              Image.asset(
+                'lib/images/hradec.png',
+                height: 50,
               ),
-              const SizedBox(height: 60)
             ],
           ),
         ],
