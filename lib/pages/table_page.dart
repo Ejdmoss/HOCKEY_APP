@@ -16,12 +16,7 @@ class _TablePageState extends State<TablePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        title: const Padding(
-          padding: EdgeInsets.only(left: 95),
-          child: Text("Table"),
-        ),
-      ),
+      appBar: AppBar(),
       body: Column(
         children: [
           // Header row
@@ -120,7 +115,7 @@ class _TablePageState extends State<TablePage> {
                           Expanded(
                             flex: 1,
                             child: Text(
-                              '${snapshot.child("placement").value.toString()}.', // Adding a dot after the placement
+                              '${snapshot.child("placement").value.toString()}.',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -128,12 +123,24 @@ class _TablePageState extends State<TablePage> {
                             ),
                           ),
                           Expanded(
-                            flex:
-                                5, // Increased flex to add more space between name and matches
+                            flex: 5,
                             child: Row(
                               children: [
-                                Image.asset('lib/images/vitkovice.png',
-                                    width: 20, height: 20),
+                                // Use Image.network to load the logo from the URL provided in the database
+                                Image.network(
+                                  snapshot
+                                      .child("logo")
+                                      .value
+                                      .toString(), // Assuming this gives the URL of the logo
+                                  width: 20,
+                                  height: 20,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    // Placeholder in case of an error loading the image
+                                    return const Icon(Icons.error,
+                                        size:
+                                            20); // Replace with any error widget you prefer
+                                  },
+                                ),
                                 const SizedBox(width: 5),
                                 Text(
                                   snapshot.child("name").value.toString(),
@@ -174,8 +181,8 @@ class _TablePageState extends State<TablePage> {
                       ),
                     ),
                     Divider(
-                      thickness: 1, // Adjust thickness if needed
-                      height: 1, // Adjust height to control spacing
+                      thickness: 1,
+                      height: 1,
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ],
