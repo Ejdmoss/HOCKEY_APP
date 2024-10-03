@@ -12,6 +12,10 @@ class TablePage extends StatefulWidget {
 final databaseReference = FirebaseDatabase.instance.ref('teams');
 
 class _TablePageState extends State<TablePage> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController placementController = TextEditingController();
+  // Add more controllers if needed for input fields
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,87 +28,28 @@ class _TablePageState extends State<TablePage> {
       ),
       body: Column(
         children: [
-          // Header Row
+          // Reading from the Realtime Database
           Container(
-            margin: const EdgeInsets.all(10),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    '#',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    'Team',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    'M',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    'W',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    'L',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    'P',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondary,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("#", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 18, fontWeight: FontWeight.bold),),
+                  Text("Team", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 16, fontWeight: FontWeight.bold),),
+                  Text("M", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 16, fontWeight: FontWeight.bold),),
+                  Text("W", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 16, fontWeight: FontWeight.bold),),
+                  Text("L", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 16, fontWeight: FontWeight.bold),),
+                  Text("P", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 16, fontWeight: FontWeight.bold),),
+                ],
+              ),
             ),
           ),
-          // Reading from the Realtime Database
+
           Expanded(
             child: FirebaseAnimatedList(
               query: databaseReference,
@@ -114,13 +59,14 @@ class _TablePageState extends State<TablePage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   margin: const EdgeInsets.all(10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ),
+                    title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          flex: 1,
                           child: Text(
                             snapshot.child("placement").value.toString(),
                             style: const TextStyle(
@@ -129,54 +75,29 @@ class _TablePageState extends State<TablePage> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
                         Expanded(
-                          flex: 3,
                           child: Text(
                             snapshot.child("name").value.toString(),
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
                           ),
                         ),
-                        const SizedBox(width: 10),
                         Expanded(
-                          flex: 1,
                           child: Text(
                             snapshot.child("matches").value.toString(),
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
                           ),
                         ),
-                        const SizedBox(width: 10),
                         Expanded(
-                          flex: 1,
                           child: Text(
                             snapshot.child("wins").value.toString(),
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
                           ),
                         ),
-                        const SizedBox(width: 10),
                         Expanded(
-                          flex: 1,
                           child: Text(
                             snapshot.child("loses").value.toString(),
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
                           ),
                         ),
-                        const SizedBox(width: 10),
                         Expanded(
-                          flex: 1,
                           child: Text(
                             snapshot.child("points").value.toString(),
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
                           ),
                         ),
                       ],
