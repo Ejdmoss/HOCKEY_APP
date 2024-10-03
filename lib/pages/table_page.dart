@@ -12,10 +12,6 @@ class TablePage extends StatefulWidget {
 final databaseReference = FirebaseDatabase.instance.ref('teams');
 
 class _TablePageState extends State<TablePage> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController placementController = TextEditingController();
-  // Add more controllers if needed for input fields
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,80 +24,144 @@ class _TablePageState extends State<TablePage> {
       ),
       body: Column(
         children: [
-          // Reading from the Realtime Database
+          // Header row
           Container(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.secondary,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 10),
+              padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("#", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 18, fontWeight: FontWeight.bold),),
-                  Text("Team", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 16, fontWeight: FontWeight.bold),),
-                  Text("M", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 16, fontWeight: FontWeight.bold),),
-                  Text("W", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 16, fontWeight: FontWeight.bold),),
-                  Text("L", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 16, fontWeight: FontWeight.bold),),
-                  Text("P", style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 16, fontWeight: FontWeight.bold),),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      "#",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    flex:
+                        4, 
+                    child: Text(
+                      "Team",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(width: 40),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      "M",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      "W",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      "L",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      "P",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
 
+          // Data rows
           Expanded(
             child: FirebaseAnimatedList(
               query: databaseReference,
               itemBuilder: (context, snapshot, animation, index) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            snapshot.child("placement").value.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                return ListTile(
+                  contentPadding: const EdgeInsets.only(left: 20, right: 5),
+                  title: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '${snapshot.child("placement").value.toString()}.', // Adding a dot after the placement
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex:
+                            5, // Increased flex to add more space between name and matches
+                        child: Row(
+                          children: [
+                            Image.asset('lib/images/vitkovice.png',
+                                width: 20, height: 20),
+                            const SizedBox(width: 5),
+                            Text(
+                              snapshot.child("name").value.toString(),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                          ),
+                          ],
                         ),
-                        Expanded(
-                          child: Text(
-                            snapshot.child("name").value.toString(),
-                          ),
+                      ),
+                    const SizedBox(width: 10),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          snapshot.child("matches").value.toString(),
                         ),
-                        Expanded(
-                          child: Text(
-                            snapshot.child("matches").value.toString(),
-                          ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          snapshot.child("wins").value.toString(),
                         ),
-                        Expanded(
-                          child: Text(
-                            snapshot.child("wins").value.toString(),
-                          ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          snapshot.child("loses").value.toString(),
                         ),
-                        Expanded(
-                          child: Text(
-                            snapshot.child("loses").value.toString(),
-                          ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          snapshot.child("points").value.toString(),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Expanded(
-                          child: Text(
-                            snapshot.child("points").value.toString(),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },
