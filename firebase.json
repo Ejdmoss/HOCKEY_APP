@@ -1,1 +1,21 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"hockeyapp-2a4d3","appId":"1:443017504333:android:8430b6b82df7fce49f1e04","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"hockeyapp-2a4d3","configurations":{"android":"1:443017504333:android:8430b6b82df7fce49f1e04"}}}}}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "hockeyapp-2a4d3",
+                    "appId": "1:443017504333:android:8430b6b82df7fce49f1e04",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "hockeyapp-2a4d3",
+                    "configurations": {
+                        "android": "1:443017504333:android:8430b6b82df7fce49f1e04"
+                    }
+                }
+            }
+        }
+    }
+}
