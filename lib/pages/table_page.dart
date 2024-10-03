@@ -39,20 +39,21 @@ class _TablePageState extends State<TablePage> {
                     child: Text(
                       "#",
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Expanded(
-                    flex:
-                        4, 
+                    flex: 4,
                     child: Text(
                       "Team",
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 40),
@@ -61,9 +62,10 @@ class _TablePageState extends State<TablePage> {
                     child: Text(
                       "M",
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Expanded(
@@ -71,9 +73,10 @@ class _TablePageState extends State<TablePage> {
                     child: Text(
                       "W",
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Expanded(
@@ -81,9 +84,10 @@ class _TablePageState extends State<TablePage> {
                     child: Text(
                       "L",
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Expanded(
@@ -91,9 +95,10 @@ class _TablePageState extends State<TablePage> {
                     child: Text(
                       "P",
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -106,63 +111,74 @@ class _TablePageState extends State<TablePage> {
             child: FirebaseAnimatedList(
               query: databaseReference,
               itemBuilder: (context, snapshot, animation, index) {
-                return ListTile(
-                  contentPadding: const EdgeInsets.only(left: 20, right: 5),
-                  title: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          '${snapshot.child("placement").value.toString()}.', // Adding a dot after the placement
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex:
-                            5, // Increased flex to add more space between name and matches
-                        child: Row(
-                          children: [
-                            Image.asset('lib/images/vitkovice.png',
-                                width: 20, height: 20),
-                            const SizedBox(width: 5),
-                            Text(
-                              snapshot.child("name").value.toString(),
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                return Column(
+                  children: [
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left: 20, right: 5),
+                      title: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              '${snapshot.child("placement").value.toString()}.', // Adding a dot after the placement
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Expanded(
+                            flex:
+                                5, // Increased flex to add more space between name and matches
+                            child: Row(
+                              children: [
+                                Image.asset('lib/images/vitkovice.png',
+                                    width: 20, height: 20),
+                                const SizedBox(width: 5),
+                                Text(
+                                  snapshot.child("name").value.toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              snapshot.child("matches").value.toString(),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              snapshot.child("wins").value.toString(),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              snapshot.child("loses").value.toString(),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              snapshot.child("points").value.toString(),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
                       ),
-                    const SizedBox(width: 10),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          snapshot.child("matches").value.toString(),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          snapshot.child("wins").value.toString(),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          snapshot.child("loses").value.toString(),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          snapshot.child("points").value.toString(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    Divider(
+                      thickness: 1, // Adjust thickness if needed
+                      height: 1, // Adjust height to control spacing
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ],
                 );
               },
             ),
