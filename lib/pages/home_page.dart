@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
             margin: const EdgeInsets.symmetric(horizontal: 15),
             padding: const EdgeInsets.only(bottom: 15),
             child: Text(
-              'Today 22.09.',
+              'Today 6.10.',
               style: TextStyle(
                   color: Theme.of(context).colorScheme.inversePrimary,
                   fontSize: 16,
@@ -159,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 const SizedBox(width: 5),
                                 Expanded(
-                                  flex: 3,
+                                  flex: 5,
                                   child: Text(
                                     snapshot.child("team1").value.toString(),
                                     style: const TextStyle(
