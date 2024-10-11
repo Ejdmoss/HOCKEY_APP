@@ -9,7 +9,7 @@ class TablePage extends StatefulWidget {
   State<TablePage> createState() => _TablePageState();
 }
 
-final databaseReference = FirebaseDatabase.instance.ref('teams');
+final databaseReference = FirebaseDatabase.instance.ref('table');
 
 class _TablePageState extends State<TablePage> {
   Color getRowColor(int placement) {

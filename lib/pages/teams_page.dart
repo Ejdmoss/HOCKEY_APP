@@ -9,7 +9,7 @@ class TeamsPage extends StatefulWidget {
   State<TeamsPage> createState() => _TeamsPageState();
 }
 
-final databaseReference = FirebaseDatabase.instance.ref('teams');
+final databaseReference = FirebaseDatabase.instance.ref('table');
 
 class _TeamsPageState extends State<TeamsPage> {
   @override

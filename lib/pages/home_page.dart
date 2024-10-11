@@ -14,20 +14,37 @@ class HomePage extends StatefulWidget {
 final databaseReference = FirebaseDatabase.instance.ref('games');
 
 String formatDate(String dateString) {
-  // Parse the date string to a DateTime object
   DateTime parsedDate = DateTime.parse(dateString);
-
-  // Use DateFormat from intl to format the date as 'day.month'
   String formattedDate = DateFormat('dd.MM').format(parsedDate);
-
   return formattedDate;
 }
 
 class _HomePageState extends State<HomePage> {
+  DateTime selectedDate = DateTime.now(); // Start with today's date
+
+  // Fetch games from Firebase for the selected date
+  DatabaseReference getGamesForDate(DateTime date) {
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    return databaseReference.child(formattedDate);
+  }
+
+  // Move to the next date
+  void nextDate() {
+    setState(() {
+      selectedDate = selectedDate.add(Duration(days: 1));
+    });
+  }
+
+  // Move to the previous date
+  void previousDate() {
+    setState(() {
+      selectedDate = selectedDate.subtract(Duration(days: 1));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // app bar with leading button for the sidebar
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
@@ -44,7 +61,6 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // User profile at the start of the page with a row containing user's profile picture, name, and favorite team
           Container(
             padding: const EdgeInsets.all(12.0),
             margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -74,41 +90,30 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          const SizedBox(height: 15),
-          // League section with an option to click and view team standings
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.all(12.0),
-            margin: const EdgeInsets.symmetric(horizontal: 15),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Image.asset('lib/images/tipac.png',
-                      width: 50, height: 30),
-                ),
-                Text('Extraliga',
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500)),
-              ],
-            ),
-          ),
-          const SizedBox(height: 15),
-          // Date section
+          // Date section with Previous and Next buttons
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 15),
             padding: const EdgeInsets.only(bottom: 15),
-            child: Text(
-              'Today 6.10.',
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: previousDate,
+                ),
+                Text(
+                  'Matches on ${formatDate(selectedDate.toString())}',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_forward),
+                  onPressed: nextDate,
+                ),
+              ],
             ),
           ),
           Divider(
@@ -116,9 +121,10 @@ class _HomePageState extends State<HomePage> {
             height: 1,
             color: Theme.of(context).colorScheme.secondary,
           ),
+          // Fetch and display games for the selected date
           Expanded(
             child: FirebaseAnimatedList(
-              query: databaseReference,
+              query: getGamesForDate(selectedDate),
               itemBuilder: (context, snapshot, animation, index) {
                 return Column(
                   children: [
@@ -127,11 +133,10 @@ class _HomePageState extends State<HomePage> {
                           const EdgeInsets.only(left: 20, right: 20),
                       title: Row(
                         children: [
-                          // Date and time section
                           Expanded(
                             flex: 2,
                             child: Text(
-                              '${formatDate(snapshot.child("date").value.toString())} ${snapshot.child("time").value.toString()}', // Format date and append time
+                              snapshot.child("time").value.toString(),
                               style: TextStyle(
                                 color: Theme.of(context)
                                     .colorScheme
@@ -140,17 +145,12 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-
-                          // First team logo, name, and score
                           Expanded(
                             flex: 4,
                             child: Row(
                               children: [
                                 Image.network(
-                                  snapshot
-                                      .child("team1logo")
-                                      .value
-                                      .toString(), // Replace with the field for team 1 logo
+                                  snapshot.child("team1logo").value.toString(),
                                   width: 30,
                                   height: 30,
                                   errorBuilder: (context, error, stackTrace) {
@@ -168,14 +168,13 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 ),
-                                // Team 1 score
                                 Expanded(
                                   flex: 1,
                                   child: Text(
                                     snapshot
                                         .child("team1score")
                                         .value
-                                        .toString(), // Replace with the field for team 1 score
+                                        .toString(),
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
@@ -186,7 +185,6 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
-                          // Separator (optional)
                           const Expanded(
                             flex: 1,
                             child: Center(
@@ -196,10 +194,7 @@ class _HomePageState extends State<HomePage> {
                           Expanded(
                             flex: 1,
                             child: Text(
-                              snapshot
-                                  .child("team2score")
-                                  .value
-                                  .toString(), // Replace with the field for team 2 score
+                              snapshot.child("team2score").value.toString(),
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
@@ -207,16 +202,12 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                          // Second team logo, name, and score
                           Expanded(
                             flex: 4,
                             child: Row(
                               children: [
                                 Image.network(
-                                  snapshot
-                                      .child("team2logo")
-                                      .value
-                                      .toString(), // Replace with the field for team 2 logo
+                                  snapshot.child("team2logo").value.toString(),
                                   width: 30,
                                   height: 30,
                                   errorBuilder: (context, error, stackTrace) {
@@ -234,7 +225,6 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 ),
-                                // Team 2 score
                               ],
                             ),
                           ),
