@@ -1,5 +1,4 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hockey_app/addons/my_drawer.dart';
 import 'package:intl/intl.dart';
@@ -11,34 +10,48 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-final databaseReference = FirebaseDatabase.instance.ref('games');
-
-String formatDate(String dateString) {
-  DateTime parsedDate = DateTime.parse(dateString);
-  String formattedDate = DateFormat('dd.MM').format(parsedDate);
-  return formattedDate;
-}
-
 class _HomePageState extends State<HomePage> {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   DateTime selectedDate = DateTime.now(); // Start with today's date
+  int selectedMonthIndex = DateTime.now().month - 1; // Month index for dropdown
 
-  // Fetch games from Firebase for the selected date
-  DatabaseReference getGamesForDate(DateTime date) {
+  // List of month names
+  final List<String> monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+
+  // Fetch games from Firestore for the selected date
+  Stream<QuerySnapshot> getGamesForDate(DateTime date) {
     String formattedDate = DateFormat('yyyy-MM-dd').format(date);
-    return databaseReference.child(formattedDate);
+    return firestore.collection('matches')
+      .where('date', isEqualTo: formattedDate)
+      .snapshots();
   }
 
-  // Move to the next date
-  void nextDate() {
+  // Change date by offsetting days
+  void changeDate(int offset) {
     setState(() {
-      selectedDate = selectedDate.add(Duration(days: 1));
+      selectedDate = selectedDate.add(Duration(days: offset));
     });
   }
 
-  // Move to the previous date
-  void previousDate() {
+  // Update month based on the selected month index
+  void updateMonth(int index) {
     setState(() {
-      selectedDate = selectedDate.subtract(Duration(days: 1));
+      selectedMonthIndex = index;
+      // Update selectedDate to the first day of the new month
+      selectedDate = DateTime(selectedDate.year, index + 1, 1);
     });
   }
 
@@ -61,182 +74,208 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(12.0),
-            margin: const EdgeInsets.symmetric(horizontal: 15),
+          // Display the month and year with dropdown
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Image.asset('lib/images/trinec.png',
-                      width: 75, height: 75),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Adam Stuchlík',
+                GestureDetector(
+                  onTap: () {
+                    // Show the dropdown menu when the text is tapped
+                    showMenu(
+                      context: context,
+                      position: RelativeRect.fromLTRB(100.0, 100.0, 0.0, 0.0), // Position of the dropdown
+                      items: List.generate(monthNames.length, (index) {
+                        return PopupMenuItem<int>(
+                          value: index,
+                          child: Text(monthNames[index]),
+                        );
+                      }),
+                    ).then((value) {
+                      if (value != null) {
+                        updateMonth(value); // Update the selected month
+                      }
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        DateFormat('MMMM yyyy').format(selectedDate), // Month and Year
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.inversePrimary,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500)),
-                    const SizedBox(height: 4),
-                    Text('HC Oceláři Třinec',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Date section with Previous and Next buttons
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15),
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: previousDate,
-                ),
-                Text(
-                  'Matches on ${formatDate(selectedDate.toString())}',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 8), // Space between text and icon
+                      Icon(
+                        Icons.arrow_drop_down, // Dropdown icon
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ],
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.arrow_forward),
-                  onPressed: nextDate,
-                ),
               ],
             ),
           ),
-          Divider(
-            thickness: 1,
-            height: 1,
-            color: Theme.of(context).colorScheme.secondary,
+          // Horizontal Date Picker
+          Container(
+            height: 60,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 7, // Display a week of dates
+              itemBuilder: (context, index) {
+                DateTime date = selectedDate.add(Duration(days: index - 3)); // Center the selected date
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedDate = date; // Set the selected date on tap
+                    });
+                  },
+                  child: Container(
+                    width: 80,
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: date.isAtSameMomentAs(selectedDate) ? Colors.blueAccent : Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          DateFormat('EEE').format(date), // Day of the week
+                          style: TextStyle(
+                            color: date.isAtSameMomentAs(selectedDate) ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        Text(
+                          DateFormat('dd').format(date), // Day of the month
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: date.isAtSameMomentAs(selectedDate) ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           // Fetch and display games for the selected date
           Expanded(
-            child: FirebaseAnimatedList(
-              query: getGamesForDate(selectedDate),
-              itemBuilder: (context, snapshot, animation, index) {
-                return Column(
-                  children: [
-                    ListTile(
-                      contentPadding:
-                          const EdgeInsets.only(left: 20, right: 20),
-                      title: Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              snapshot.child("time").value.toString(),
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .inversePrimary,
-                                fontWeight: FontWeight.w600,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: getGamesForDate(selectedDate),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text('No games available for this date.'));
+                }
+
+                return ListView(
+                  children: snapshot.data!.docs.map((doc) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          contentPadding: const EdgeInsets.only(left: 20, right: 20),
+                          title: Row(
+                            children: [
+                              Expanded(
+                                flex: 4,
+                                child: Row(
+                                  children: [
+                                    Image.network(
+                                      doc["team1logo"] ?? "", // Handle missing logo
+                                      width: 30,
+                                      height: 30,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return const Icon(Icons.error, size: 20);
+                                      },
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                      flex: 5,
+                                      child: Text(
+                                        doc["team1name"] ?? "Team 1", // Handle missing team name
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        doc["team1score"].toString(),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Row(
-                              children: [
-                                Image.network(
-                                  snapshot.child("team1logo").value.toString(),
-                                  width: 30,
-                                  height: 30,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.error, size: 20);
-                                  },
+                              const Expanded(
+                                flex: 1,
+                                child: Center(
+                                  child: Text(':'), // Separator
                                 ),
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  flex: 5,
-                                  child: Text(
-                                    snapshot.child("team1").value.toString(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    snapshot
-                                        .child("team1score")
-                                        .value
-                                        .toString(),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 1,
-                            child: Center(
-                              child: Text(':'),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              snapshot.child("team2score").value.toString(),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
                               ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Row(
-                              children: [
-                                Image.network(
-                                  snapshot.child("team2logo").value.toString(),
-                                  width: 30,
-                                  height: 30,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.error, size: 20);
-                                  },
-                                ),
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    snapshot.child("team2").value.toString(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  doc["team2score"].toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Expanded(
+                                flex: 4,
+                                child: Row(
+                                  children: [
+                                    Image.network(
+                                      doc["team2logo"] ?? "", // Handle missing logo
+                                      width: 30,
+                                      height: 30,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return const Icon(Icons.error, size: 20);
+                                      },
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        doc["team2name"] ?? "Team 2", // Handle missing team name
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      thickness: 1,
-                      height: 1,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                  ],
+                        ),
+                        Divider(
+                          thickness: 1,
+                          height: 1,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ],
+                    );
+                  }).toList(),
                 );
               },
             ),
