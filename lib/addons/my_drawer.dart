@@ -20,10 +20,34 @@ class MyDrawer extends StatelessWidget {
       child: Column(
         children: [
           // logo mojí aplikace
-          Padding(
-            padding: const EdgeInsets.only(top: 100),
-            child: Icon(Icons.sports_hockey,
-                size: 80, color: Theme.of(context).colorScheme.inversePrimary),
+         Container(
+            padding: const EdgeInsets.only(top: 70, left: 15),
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Image.asset('lib/images/trinec.png',
+                      width: 75, height: 75),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Adam Stuchlík',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500)),
+                    const SizedBox(height: 4),
+                    Text('HC Oceláři Třinec',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700)),
+                  ],
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(25),
