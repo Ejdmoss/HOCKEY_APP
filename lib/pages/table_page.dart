@@ -40,7 +40,7 @@ class _TablePageState extends State<TablePage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 image: const DecorationImage(
-                  image: AssetImage('lib/images/ehl.jpg'), // Background image
+                  image: AssetImage('lib/images/ehl2.jpg'), // Background image
                   fit: BoxFit.cover,
                 ),
               ),

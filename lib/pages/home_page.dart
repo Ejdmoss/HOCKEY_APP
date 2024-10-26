@@ -65,29 +65,7 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Card Design with Image and Text
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              height: 180,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                image: const DecorationImage(
-                  image: AssetImage('lib/images/ehl.jpg'), // Background image
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.black.withOpacity(0.3),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          
           // Rest of the Content
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -117,8 +95,8 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         DateFormat('MMMM yyyy').format(selectedDate),
                         style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.inversePrimary,
                         ),
                       ),
@@ -306,6 +284,29 @@ class _HomePageState extends State<HomePage> {
                   }).toList(),
                 );
               },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 35, left: 15, right: 15),
+            child: Container(
+              height: 180,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                image: const DecorationImage(
+                  image: AssetImage('lib/images/ehl2.jpg'), // Background image
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.black.withOpacity(0.3),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
