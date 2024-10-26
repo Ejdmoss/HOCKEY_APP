@@ -4,7 +4,7 @@ import 'package:hockey_app/addons/my_drawer.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key}); // Konstruktor pro HomePage.
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -12,11 +12,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  DateTime selectedDate = DateTime.now(); // Dnešní datum
-  int selectedMonthIndex =
-      DateTime.now().month - 1; // Index aktuálního měsíce pro dropdown.
+  DateTime selectedDate = DateTime.now();
+  int selectedMonthIndex = DateTime.now().month - 1;
 
-  // Seznam názvů měsíců pro dropdown.
   final List<String> monthNames = [
     'January',
     'February',
@@ -32,21 +30,17 @@ class _HomePageState extends State<HomePage> {
     'December'
   ];
 
-  // Načteme zápasy z Firestore pro vybrané datum.
   Stream<QuerySnapshot> getGamesForDate(DateTime date) {
-    String formattedDate =
-        DateFormat('yyyy-MM-dd').format(date); // Formátování data
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
     return firestore
         .collection('matches')
-        .where('date', isEqualTo: formattedDate) // Filtrujeme zápasy podle dat
+        .where('date', isEqualTo: formattedDate)
         .snapshots();
   }
 
-  // Upravíme měsíc podle vybraného indexu.
   void updateMonth(int index) {
     setState(() {
-      selectedMonthIndex = index; // Aktualizujeme index měsíce.
-      // Nastavíme selectedDate na první den nového měsíce.
+      selectedMonthIndex = index;
       selectedDate = DateTime(selectedDate.year, index + 1, 1);
     });
   }
@@ -57,20 +51,44 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Icon(Icons.menu), // Tlačítko pro otevření bočního menu.
+            icon: const Icon(Icons.menu),
             onPressed: () {
-              Scaffold.of(context).openDrawer(); // Otevřeme boční menu.
+              Scaffold.of(context).openDrawer();
             },
           ),
         ),
-        backgroundColor: Colors.transparent, // Průhledné pozadí.
-        elevation: 0, // Žádný stín.
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      drawer: const MyDrawer(), // Přidání bočního menu.
+      drawer: const MyDrawer(),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // Zarovnání vlevo.
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Zobrazení měsíce a roku s dropdown menu.
+          // Card Design with Image and Text
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              height: 180,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                image: const DecorationImage(
+                  image: AssetImage('lib/images/ehl.jpg'), // Background image
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.black.withOpacity(0.3),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Rest of the Content
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -78,39 +96,34 @@ class _HomePageState extends State<HomePage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // Zobrazíme dropdown menu při klepnutí.
                     showMenu(
                       context: context,
-                      position: const RelativeRect.fromLTRB(
-                          100.0, 100.0, 0.0, 0.0), // Pozice dropdownu.
+                      position:
+                          const RelativeRect.fromLTRB(100.0, 100.0, 0.0, 0.0),
                       items: List.generate(monthNames.length, (index) {
                         return PopupMenuItem<int>(
-                          value: index, // Nastavíme hodnotu indexu měsíce.
-                          child: Text(
-                              monthNames[index]), // Zobrazíme název měsíce.
+                          value: index,
+                          child: Text(monthNames[index]),
                         );
                       }),
                     ).then((value) {
                       if (value != null) {
-                        updateMonth(value); // Aktualizujeme vybraný měsíc.
+                        updateMonth(value);
                       }
                     });
                   },
                   child: Row(
                     children: [
                       Text(
-                        DateFormat('MMMM yyyy')
-                            .format(selectedDate), // Zobrazíme měsíc a rok.
+                        DateFormat('MMMM yyyy').format(selectedDate),
                         style: TextStyle(
-                          fontSize: 24, // Velikost písma.
-                          fontWeight: FontWeight.bold, // Tučné písmo.
-                          color: Theme.of(context)
-                              .colorScheme
-                              .inversePrimary, // Hlavní barva textu.
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.inversePrimary,
                         ),
                       ),
                       Icon(
-                        Icons.arrow_drop_down, // Ikona pro dropdown.
+                        Icons.arrow_drop_down,
                         color: Theme.of(context).colorScheme.inversePrimary,
                       ),
                     ],
@@ -119,22 +132,18 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          // Fixní horizontální výběr dat.
           Container(
             height: 60,
             margin: const EdgeInsets.symmetric(vertical: 8),
             child: Center(
-              // Uprostřed zarovnáme výběr dat.
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(5, (index) {
-                  DateTime date = selectedDate.add(
-                      Duration(days: index - 2)); // Uprostřed vybrané datum.
+                  DateTime date = selectedDate.add(Duration(days: index - 2));
                   return GestureDetector(
                     onTap: () {
                       setState(() {
-                        selectedDate =
-                            date; // Nastavíme vybrané datum na klepnutí.
+                        selectedDate = date;
                       });
                     },
                     child: Container(
@@ -144,14 +153,13 @@ class _HomePageState extends State<HomePage> {
                         color: date.isAtSameMomentAs(selectedDate)
                             ? Theme.of(context).colorScheme.primary
                             : Colors.transparent,
-                        borderRadius:
-                            BorderRadius.circular(10), // Zaoblené rohy.
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            DateFormat('EEE').format(date), // Den v týdnu.
+                            DateFormat('EEE').format(date),
                             style: TextStyle(
                               color: date.isAtSameMomentAs(selectedDate)
                                   ? Theme.of(context).colorScheme.inversePrimary
@@ -161,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Text(
-                            DateFormat('dd').format(date), // Den v měsíci.
+                            DateFormat('dd').format(date),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: date.isAtSameMomentAs(selectedDate)
@@ -179,22 +187,17 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          // Načteme a zobrazíme zápasy pro vybrané datum.
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream:
-                  getGamesForDate(selectedDate), // Posloucháme stream zápasů.
+              stream: getGamesForDate(selectedDate),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                      child:
-                          CircularProgressIndicator()); // Zobrazíme načítací indikátor.
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(
-                      child: Text(
-                          'No games available for this date.')); // Žádné zápasy.
+                      child: Text('No games available for this date.'));
                 }
 
                 return ListView(
@@ -203,45 +206,38 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         ListTile(
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10), // Vnitřní okraje.
+                              horizontal: 20, vertical: 10),
                           title: Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween, // Vycentrujeme obsah.
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center, // Uprostřed.
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Image.network(
-                                      doc["team1logo"] ??
-                                          "", // Načteme logo týmu 1.
+                                      doc["team1logo"] ?? "",
                                       width: 30,
                                       height: 30,
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return const Icon(Icons.error,
-                                            size:
-                                                20); // Ikona chyby, pokud se logo nepodaří načíst.
+                                            size: 20);
                                       },
                                     ),
                                     const SizedBox(width: 5),
                                     Expanded(
                                       child: Text(
-                                        doc["team1name"] ??
-                                            "Team 1", // Načteme název týmu 1.
+                                        doc["team1name"] ?? "Team 1",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 14,
                                         ),
-                                        textAlign: TextAlign
-                                            .center, // Vycentrujeme text.
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                     Expanded(
                                       child: Text(
-                                        doc["team1score"]
-                                            .toString(), // Načteme skóre týmu 1.
+                                        doc["team1score"].toString(),
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
@@ -252,24 +248,19 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 ),
                               ),
-                              const SizedBox(
-                                  width: 5), // Malý prostor mezi týmy.
+                              const SizedBox(width: 5),
                               const Text(':',
                                   style: TextStyle(
                                       fontSize: 24,
-                                      fontWeight:
-                                          FontWeight.bold)), // Oddělovač.
-                              const SizedBox(
-                                  width: 5), // Malý prostor mezi týmy.
+                                      fontWeight: FontWeight.bold)),
+                              const SizedBox(width: 5),
                               Expanded(
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center, // Uprostřed.
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        doc["team2score"]
-                                            .toString(), // Načteme skóre týmu 2.
+                                        doc["team2score"].toString(),
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
@@ -280,27 +271,23 @@ class _HomePageState extends State<HomePage> {
                                     const SizedBox(width: 5),
                                     Expanded(
                                       child: Text(
-                                        doc["team2name"] ??
-                                            "Team 2", // Načteme název týmu 2.
+                                        doc["team2name"] ?? "Team 2",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 14,
                                         ),
-                                        textAlign: TextAlign
-                                            .center, // Vycentrujeme text.
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                     const SizedBox(width: 5),
                                     Image.network(
-                                      doc["team2logo"] ??
-                                          "", // Načteme logo týmu 2.
+                                      doc["team2logo"] ?? "",
                                       width: 30,
                                       height: 30,
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return const Icon(Icons.error,
-                                            size:
-                                                20); // Ikona chyby pro logo týmu 2.
+                                            size: 20);
                                       },
                                     ),
                                   ],
@@ -310,11 +297,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Divider(
-                          thickness: 1, // Tloušťka oddělovače.
-                          height: 1, // Výška oddělovače.
-                          color: Theme.of(context)
-                              .colorScheme
-                              .secondary, // Barva oddělovače.
+                          thickness: 1,
+                          height: 1,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ],
                     );
@@ -323,27 +308,6 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
-          Padding(
-  padding: const EdgeInsets.all(25.0),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: [
-      Row(
-        children: [
-          const SizedBox(width: 5),
-          Icon(
-            Icons.table_rows,
-            size: 30,
-            color: Theme.of(context).colorScheme.inversePrimary,
-          ),
-          const SizedBox(width: 5), 
-          const Text("Table"),
-        ],
-      ),
-    ],
-  ),
-),
-
         ],
       ),
     );

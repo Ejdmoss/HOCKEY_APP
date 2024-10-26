@@ -14,15 +14,15 @@ final databaseReference = FirebaseDatabase.instance.ref('table');
 class _TablePageState extends State<TablePage> {
   Color getRowColor(int placement) {
     if (placement <= 4) {
-      return const Color.fromARGB(255, 0, 70, 130);
+      return const Color.fromARGB(255, 21, 39, 77);
     } else if (placement >= 5 && placement <= 12) {
-      return const Color.fromARGB(255, 30, 168, 236);
+      return const Color.fromARGB(255, 18, 77, 107);
     } else if (placement == 13) {
       return Theme.of(context).colorScheme.tertiary;
     } else if (placement == 14) {
-      return const Color.fromARGB(255, 230, 0, 5);
+      return const Color.fromARGB(255, 68, 24, 25);
     }
-    return const Color.fromARGB(255, 42, 46, 55); // Default color
+    return const Color.fromARGB(255, 25, 24, 40); // Default color
   }
 
   @override
@@ -32,86 +32,109 @@ class _TablePageState extends State<TablePage> {
       appBar: AppBar(),
       body: Column(
         children: [
-          // Header row
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
-              child: Row(
+          // La Liga Logo
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              height: 180,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                image: const DecorationImage(
+                  image: AssetImage('lib/images/ehl.jpg'), // Background image
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Stack(
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      "#",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: Text(
-                      "Team",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 40),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      "M",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      "W",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      "L",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      "P",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.black.withOpacity(0.3),
                     ),
                   ),
                 ],
               ),
             ),
+          ),
+          // Header row
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    "#",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Text(
+                    "Team",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 40),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    "M",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    "W",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    "L",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    "P",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            thickness: 1,
+            height: 1,
+            color: Theme.of(context).colorScheme.secondary,
           ),
 
           // Data rows
@@ -132,7 +155,8 @@ class _TablePageState extends State<TablePage> {
                             height: 40, // Height of the strap
                             decoration: BoxDecoration(
                               color: getRowColor(placement),
-                              borderRadius: BorderRadius.circular(5), // Rounded corners
+                              borderRadius:
+                                  BorderRadius.circular(5), // Rounded corners
                             ),
                           ),
                           const SizedBox(width: 5),
@@ -152,18 +176,24 @@ class _TablePageState extends State<TablePage> {
                               children: [
                                 // Use Image.network to load the logo from the URL provided in the database
                                 Image.network(
-                                  snapshot.child("logo").value.toString(), // Assuming this gives the URL of the logo
+                                  snapshot
+                                      .child("logo")
+                                      .value
+                                      .toString(), // Assuming this gives the URL of the logo
                                   width: 20,
                                   height: 20,
                                   errorBuilder: (context, error, stackTrace) {
                                     // Placeholder in case of an error loading the image
-                                    return const Icon(Icons.error, size: 20); // Replace with any error widget you prefer
+                                    return const Icon(Icons.error,
+                                        size:
+                                            20); // Replace with any error widget you prefer
                                   },
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
                                   snapshot.child("name").value.toString(),
-                                  style: const TextStyle(fontWeight: FontWeight.w600),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
@@ -191,7 +221,8 @@ class _TablePageState extends State<TablePage> {
                             flex: 1,
                             child: Text(
                               snapshot.child("points").value.toString(),
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
                         ],
