@@ -29,7 +29,10 @@ class _TablePageState extends State<TablePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("Tipsport Extraliga", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+          centerTitle: true,
+      ),
       body: Column(
         children: [
           // La Liga Logo
