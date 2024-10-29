@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'team_details_page.dart';
 
 class TeamsPage extends StatefulWidget {
   const TeamsPage({super.key});
@@ -11,75 +12,60 @@ class TeamsPage extends StatefulWidget {
 class _TeamsPageState extends State<TeamsPage> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Stream<QuerySnapshot> getTeams() {
-    return firestore.collection('teams').snapshots();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: const Text(
-          "Tipsport Extraliga",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
+        title: const Text("Teams"),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: getTeams(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+      body: StreamBuilder<QuerySnapshot>(
+        stream: firestore.collection('teams').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('No teams available.'));
+          }
 
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text('No teams available.'));
-                }
+          return ListView(
+            children: snapshot.data!.docs.map((doc) {
+              String teamName = doc['name'];
+              String teamLogo = doc['logo'];
+              String teamStadium = doc['stadion'];
 
-                return ListView(
-                  children: snapshot.data!.docs.map((doc) {
-                    return Column(
-                      children: [
-                        ListTile(
-                          contentPadding: const EdgeInsets.only(left: 20, right: 20),
-                          title: Row(
-                            children: [
-                              Image.network(
-                                doc['logo'] ?? "",
-                                width: 28,
-                                height: 28,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(Icons.error, size: 20);
-                                },
-                              ),
-                              const SizedBox(width: 20),
-                              Text(
-                                doc['name'] ?? "Team Name",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Divider(
-                          thickness: 1,
-                          height: 1,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                );
-              },
-            ),
-          ),
-        ],
+              return ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                leading: Image.network(
+                  teamLogo,
+                  width: 35,
+                  height: 35,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.error, size: 30);
+                  },
+                ),
+                title: Text(
+                  teamName,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                onTap: () {
+                  // Navigate to the TeamDetailsPage with the selected team's data
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TeamDetailsPage(
+                        teamName: teamName,
+                        teamLogo: teamLogo,
+                        teamStadium: teamStadium,
+                      ),
+                    ),
+                  );
+                },
+              );
+            }).toList(),
+          );
+        },
       ),
     );
   }
