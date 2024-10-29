@@ -49,8 +49,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text("Tipsport Extraliga", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-          centerTitle: true,
+        title: const Text(
+          "Tipsport Extraliga",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        centerTitle: true,
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu),

@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.only(left: 25.0, right: 25.0),
               child: Image.asset(
-                'lib/images/ehl.png',
+                'lib/images/ehl2.jpg',
                 height: 150,
               ),
             ),
