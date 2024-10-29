@@ -68,10 +68,10 @@ class TeamDetailsPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Stadion: $teamStadium',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black54,
+                  'Arena: $teamStadium',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Theme.of(context).colorScheme.inversePrimary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

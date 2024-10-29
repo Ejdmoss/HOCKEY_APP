@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                                         doc["team1name"] ?? "Team 1",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 14,
+                                          fontSize: 13.5,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                                         doc["team2name"] ?? "Team 2",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 14,
+                                          fontSize: 13.5,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
