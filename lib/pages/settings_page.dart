@@ -1,16 +1,40 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hockey_app/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  String selectedTeamName = ''; // To store the selected team's name
+
+  // Method to save selected team data to Firestore
+  Future<void> saveSelectedTeamToDatabase(
+      String teamName, String teamLogo) async {
+    final CollectionReference chosenTeamCollection =
+        FirebaseFirestore.instance.collection('chosenTeam');
+
+    try {
+      // Adding or updating the chosen team document
+      await chosenTeamCollection.doc('userSelectedTeam').set({
+        'name': teamName,
+        'logo': teamLogo,
+      });
+    // ignore: empty_catches
+    } catch (e) {
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      // app bar s leading buttonem na rozkliknutí sidebaru
       appBar: AppBar(
         title: const Padding(
           padding: EdgeInsets.only(left: 95),
@@ -31,14 +55,14 @@ class SettingsPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // dark mode
+                // Dark mode toggle
                 Text(
                   "Dark Mode",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.inversePrimary),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
                 ),
-
                 CupertinoSwitch(
                   value: Provider.of<ThemeProvider>(context, listen: false)
                       .isdarkMode,
@@ -50,113 +74,87 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 25, bottom: 25),
+            padding: const EdgeInsets.only(top: 25, bottom: 20),
             child: Text(
               "Select your favourite team:",
               style: TextStyle(
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18),
+                color: Theme.of(context).colorScheme.inversePrimary,
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+              ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'lib/images/litvinov.png',
-                height: 50,
-              ),
-              const SizedBox(width: 10),
-              Image.asset(
-                'lib/images/pardubice.png',
-                height: 50,
-              ),
-            ],
+          // Fetching and displaying team logos
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('teams').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return const Center(child: Text('No teams available.'));
+              }
+
+              return Wrap(
+                spacing: 8, // Adjusted for better spacing
+                runSpacing: 8,
+                alignment: WrapAlignment.center,
+                children: snapshot.data!.docs.map((doc) {
+                  String teamName = doc['name'];
+                  String teamLogo = doc['logo'];
+
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedTeamName = teamName;
+                      });
+                      // Save selected team to Firestore
+                      saveSelectedTeamToDatabase(teamName, teamLogo);
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 45, // Reduced width
+                          height: 45, // Reduced height
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 4,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: ClipOval(
+                            child: Image.network(
+                              teamLogo,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error, size: 30);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              );
+            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'lib/images/mladabol.png',
-                height: 50,
+          if (selectedTeamName.isNotEmpty) // Display selected team name
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Text(
+                'Selected Team: $selectedTeamName',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
               ),
-              const SizedBox(width: 10),
-              Image.asset(
-                'lib/images/sparta.png',
-                height: 50,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'lib/images/vitkovice.png',
-                height: 50,
-              ),
-              const SizedBox(width: 10),
-              Image.asset(
-                'lib/images/kladno.png',
-                height: 50,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'lib/images/ceskebudej.png',
-                height: 50,
-              ),
-              const SizedBox(width: 10),
-              Image.asset(
-                'lib/images/trinecek.png',
-                height: 50,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'lib/images/liberec.png',
-                height: 50,
-              ),
-              const SizedBox(width: 10),
-              Image.asset(
-                'lib/images/karlovyvary.png',
-                height: 50,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'lib/images/olomouc.png',
-                height: 50,
-              ),
-              const SizedBox(width: 10),
-              Image.asset(
-                'lib/images/brno.png',
-                height: 50,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'lib/images/plzen.png',
-                height: 50,
-              ),
-              const SizedBox(width: 10),
-              Image.asset(
-                'lib/images/hradec.png',
-                height: 50,
-              ),
-            ],
-          ),
+            ),
         ],
       ),
     );

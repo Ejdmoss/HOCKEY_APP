@@ -291,7 +291,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(bottom: 35, left: 15, right: 15),
             child: Container(
-              height: 180,
+              height: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 image: const DecorationImage(
