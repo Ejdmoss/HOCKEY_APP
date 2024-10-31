@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                                         doc["team1name"] ?? "Team 1",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 13.5,
+                                          fontSize: 13,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                                         doc["team2name"] ?? "Team 2",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 13.5,
+                                          fontSize: 13,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -291,7 +291,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(bottom: 35, left: 15, right: 15),
             child: Container(
-              height: 200,
+              height: 215,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 image: const DecorationImage(
