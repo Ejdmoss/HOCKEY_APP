@@ -13,6 +13,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   String selectedTeamName = ''; // To store the selected team's name
+  String nickname = ''; // To store the entered nickname
+  bool isNicknameSubmitted = false; // To track if the nickname is submitted
 
   // Method to save selected team data to Firestore
   Future<void> saveSelectedTeamToDatabase(
@@ -25,6 +27,21 @@ class _SettingsPageState extends State<SettingsPage> {
       await chosenTeamCollection.doc('userSelectedTeam').set({
         'name': teamName,
         'logo': teamLogo,
+      });
+    // ignore: empty_catches
+    } catch (e) {
+    }
+  }
+
+  // Method to save nickname to Firestore
+  Future<void> saveNicknameToDatabase(String nickname) async {
+    final DocumentReference chosenTeamDoc =
+        FirebaseFirestore.instance.collection('chosenTeam').doc('userSelectedTeam');
+
+    try {
+      // Updating the chosen team document with the nickname
+      await chosenTeamDoc.update({
+        'nickname': nickname,
       });
     // ignore: empty_catches
     } catch (e) {
@@ -73,6 +90,58 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(25),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondary,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.all(25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your nickname', // Default text
+                        border: InputBorder.none, // Remove border
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          nickname = value;
+                          isNicknameSubmitted = false; // Reset on change
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (nickname.isNotEmpty) {
+                        saveNicknameToDatabase(nickname);
+                        setState(() {
+                          isNicknameSubmitted = true;
+                        });
+                      }
+                    },
+                    child: const Text('Submit'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (isNicknameSubmitted)
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Text(
+                'Nickname submitted!',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.only(top: 25, bottom: 20),
             child: Text(
@@ -155,6 +224,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
+          
         ],
       ),
     );
