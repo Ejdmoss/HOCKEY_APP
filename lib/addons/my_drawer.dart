@@ -22,8 +22,8 @@ class MyDrawer extends StatelessWidget {
         children: [
           StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
-                .collection('chosenTeam')
-                .doc('userSelectedTeam')
+                .collection('currentUser')
+                .doc('chosenTeam')
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {

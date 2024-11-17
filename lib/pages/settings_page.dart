@@ -19,12 +19,12 @@ class _SettingsPageState extends State<SettingsPage> {
   // Method to save selected team data to Firestore
   Future<void> saveSelectedTeamToDatabase(
       String teamName, String teamLogo) async {
-    final CollectionReference chosenTeamCollection =
-        FirebaseFirestore.instance.collection('chosenTeam');
+    final CollectionReference currentUserCollection =
+        FirebaseFirestore.instance.collection('currentUser');
 
     try {
-      // Adding or updating the chosen team document
-      await chosenTeamCollection.doc('userSelectedTeam').set({
+      // Adding or updating the chosen team document next to the data document
+      await currentUserCollection.doc('chosenTeam').set({
         'name': teamName,
         'logo': teamLogo,
       });
