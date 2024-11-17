@@ -36,6 +36,7 @@ class MyDrawer extends StatelessWidget {
               var teamData = snapshot.data!.data() as Map<String, dynamic>;
               String teamLogo = teamData['logo'];
               String teamName = teamData['name'];
+              String nickname = teamData['nickname'];
 
               return Container(
                 padding: const EdgeInsets.only(top: 70, left: 15),
@@ -61,7 +62,7 @@ class MyDrawer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Adam Stuchlík',
+                          nickname,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.inversePrimary,
                             fontSize: 17,
