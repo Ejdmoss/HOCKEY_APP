@@ -49,7 +49,8 @@ class MyDrawer extends StatelessWidget {
                           Text(
                             'No Team',
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.inversePrimary,
+                              color:
+                                  Theme.of(context).colorScheme.inversePrimary,
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
                             ),
@@ -99,7 +100,9 @@ class MyDrawer extends StatelessWidget {
                               Text(
                                 'No Nickname',
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
                                   fontSize: 17,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -108,7 +111,8 @@ class MyDrawer extends StatelessWidget {
                               Text(
                                 'Please select a team',
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -120,7 +124,8 @@ class MyDrawer extends StatelessWidget {
                     );
                   }
 
-                  var userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                  var userData =
+                      userSnapshot.data!.data() as Map<String, dynamic>;
                   String nickname = userData['nickname'] ?? 'No Nickname';
 
                   var teamData = snapshot.data!.data() as Map<String, dynamic>;
@@ -153,7 +158,9 @@ class MyDrawer extends StatelessWidget {
                             Text(
                               nickname,
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.inversePrimary,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary,
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                               ),
