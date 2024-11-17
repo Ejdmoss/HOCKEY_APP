@@ -39,8 +39,8 @@ class _TeamsPageState extends State<TeamsPage> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 leading: Image.network(
                   teamLogo,
-                  width: 35,
-                  height: 35,
+                  width: 30,
+                  height: 30,
                   errorBuilder: (context, error, stackTrace) {
                     return const Icon(Icons.error, size: 30);
                   },
