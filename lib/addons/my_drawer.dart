@@ -30,13 +30,50 @@ class MyDrawer extends StatelessWidget {
                 return const CircularProgressIndicator();
               }
               if (!snapshot.hasData || !snapshot.data!.exists) {
-                return const Text('No favourite team selected');
+                return Container(
+                  padding: const EdgeInsets.only(top: 70, left: 15),
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Image.asset(
+                          'lib/images/ehl2.png',
+                          width: 75,
+                          height: 75,
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'No Team',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.inversePrimary,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Please select a team',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
               }
 
               var teamData = snapshot.data!.data() as Map<String, dynamic>;
               String teamLogo = teamData['logo'];
               String teamName = teamData['name'];
-              String nickname = teamData['nickname'];
+              String nickname = teamData['nickname'] ?? 'No Nickname';
 
               return Container(
                 padding: const EdgeInsets.only(top: 70, left: 15),
@@ -51,7 +88,7 @@ class MyDrawer extends StatelessWidget {
                         height: 75,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.asset(
-                            'lib/images/placeholder.png',
+                            'lib/images/ehl2.png',
                             width: 75,
                             height: 75,
                           ); // Fallback image
