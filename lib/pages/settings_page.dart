@@ -35,12 +35,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
   // Method to save nickname to Firestore
   Future<void> saveNicknameToDatabase(String nickname) async {
-    final DocumentReference chosenTeamDoc =
-        FirebaseFirestore.instance.collection('chosenTeam').doc('userSelectedTeam');
+    final DocumentReference currentUserDoc =
+        FirebaseFirestore.instance.collection('currentUser').doc('data');
 
     try {
-      // Updating the chosen team document with the nickname
-      await chosenTeamDoc.update({
+      // Updating the currentUser document with the nickname
+      await currentUserDoc.set({
         'nickname': nickname,
       });
     // ignore: empty_catches

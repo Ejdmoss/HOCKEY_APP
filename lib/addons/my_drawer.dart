@@ -70,55 +70,109 @@ class MyDrawer extends StatelessWidget {
                 );
               }
 
-              var teamData = snapshot.data!.data() as Map<String, dynamic>;
-              String teamLogo = teamData['logo'];
-              String teamName = teamData['name'];
-              String nickname = teamData['nickname'] ?? 'No Nickname';
+              return FutureBuilder<DocumentSnapshot>(
+                future: FirebaseFirestore.instance
+                    .collection('currentUser')
+                    .doc('data')
+                    .get(),
+                builder: (context, userSnapshot) {
+                  if (userSnapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+                    return Container(
+                      padding: const EdgeInsets.only(top: 70, left: 15),
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Image.asset(
+                              'lib/images/ehl2.png',
+                              width: 75,
+                              height: 75,
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'No Nickname',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Please select a team',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }
 
-              return Container(
-                padding: const EdgeInsets.only(top: 70, left: 15),
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Image.network(
-                        teamLogo,
-                        width: 75,
-                        height: 75,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.asset(
-                            'lib/images/ehl2.png',
+                  var userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                  String nickname = userData['nickname'] ?? 'No Nickname';
+
+                  var teamData = snapshot.data!.data() as Map<String, dynamic>;
+                  String teamLogo = teamData['logo'];
+                  String teamName = teamData['name'];
+
+                  return Container(
+                    padding: const EdgeInsets.only(top: 70, left: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Image.network(
+                            teamLogo,
                             width: 75,
                             height: 75,
-                          ); // Fallback image
-                        },
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          nickname,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.inversePrimary,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                'lib/images/ehl2.png',
+                                width: 75,
+                                height: 75,
+                              ); // Fallback image
+                            },
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          teamName,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              nickname,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.inversePrimary,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              teamName,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  );
+                },
               );
             },
           ),
