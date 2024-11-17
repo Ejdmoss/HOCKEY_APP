@@ -5,6 +5,7 @@ import 'package:hockey_app/pages/settings_page.dart';
 import 'package:hockey_app/pages/table_page.dart';
 import 'package:hockey_app/pages/teams_page.dart';
 import 'package:hockey_app/sevices/auth/auth_service.dart';
+import 'package:hockey_app/pages/fill_data_page.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -228,6 +229,19 @@ class MyDrawer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const SettingsPage(),
+                ),
+              );
+            },
+          ),
+          MyDrawerTitle(
+            text: "Fill Data",
+            icon: Icons.edit,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FillDataPage(),
                 ),
               );
             },
