@@ -6,6 +6,7 @@ class FillDataPage extends StatefulWidget {
   const FillDataPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _FillDataPageState createState() => _FillDataPageState();
 }
 
@@ -47,6 +48,7 @@ class _FillDataPageState extends State<FillDataPage> {
         'team2logo': team2Logo,
       });
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Data saved successfully')),
       );
@@ -56,6 +58,7 @@ class _FillDataPageState extends State<FillDataPage> {
       _team2NameController.clear();
       _team2ScoreController.clear();
     } catch (error) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to save data: $error')),
       );
