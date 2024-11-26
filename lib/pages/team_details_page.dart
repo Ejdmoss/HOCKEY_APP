@@ -20,21 +20,19 @@ class TeamDetailsPage extends StatefulWidget {
   State<TeamDetailsPage> createState() => _TeamDetailsPageState();
 }
 
-class _TeamDetailsPageState extends State<TeamDetailsPage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _TeamDetailsPageState extends State<TeamDetailsPage> {
+  int _selectedIndex = 0;
   final databaseReference = FirebaseDatabase.instance.ref('table');
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -100,364 +98,356 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
               ],
             ),
             const SizedBox(height: 20),
-            TabBar(
-              controller: _tabController,
-              indicatorColor: const Color.fromARGB(255, 20, 91, 168),
-              labelColor: Theme.of(context).colorScheme.inversePrimary,
-              unselectedLabelColor:
-                  Theme.of(context).colorScheme.inversePrimary,
-              labelStyle: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-              tabs: const [
-                Tab(text: 'Matches'),
-                Tab(text: 'Table'),
-                Tab(text: 'Lineup'),
-              ],
+            Divider(
+              thickness: 1,
+              height: 1,
+              color:
+                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
             ),
-            const SizedBox(height: 20),
-            // TabBarView
             Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  // Matches Tab Content
-                  StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('matches')
-                        .where('team1name', isEqualTo: widget.teamName)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                        return const Center(
-                            child: Text('No matches available.'));
-                      }
+              child: _selectedIndex == 0
+                  ? MatchesTabContent(teamName: widget.teamName)
+                  : _selectedIndex == 1
+                      ? TableTabContent(teamName: widget.teamName)
+                      : const LineupTabContent(),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sports_hockey),
+            label: 'Matches',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.table_chart),
+            label: 'Table',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Lineup',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
+        unselectedItemColor: Theme.of(context).colorScheme.inversePrimary,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}
 
-                      return ListView(
-                        children: snapshot.data!.docs.map((doc) {
-                          String date = doc['date'];
-                          String formattedDate = DateFormat('dd.MM.yyyy')
-                              .format(DateTime.parse(date));
-                          String team1Logo = doc['team1logo'];
-                          int team1Score =
-                              int.parse(doc['team1score'].toString());
-                          String team2Logo = doc['team2logo'];
-                          int team2Score =
-                              int.parse(doc['team2score'].toString());
+class MatchesTabContent extends StatelessWidget {
+  final String teamName;
 
-                          return Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 15),
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).cardColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 5,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  children: [
-                                    // Logo and score row
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.network(
-                                          team1Logo,
-                                          width: 50,
-                                          height: 50,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return const Icon(Icons.error,
-                                                size: 50);
-                                          },
-                                        ),
-                                        const SizedBox(width: 20),
-                                        Text(
-                                          '$team1Score - $team2Score',
-                                          style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w900,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 20),
-                                        Image.network(
-                                          team2Logo,
-                                          width: 50,
-                                          height: 50,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return const Icon(Icons.error,
-                                                size: 50);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    // Team names row
-                                    // Date row
-                                    Text(
-                                      formattedDate,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .inversePrimary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                
-                              ),
-                              Divider(
-                          thickness: 1,
-                          height: 1,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                            ],
-                          );
-                        }).toList(),
-                      );
-                    },
+  const MatchesTabContent({super.key, required this.teamName});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('matches')
+          .where('team1name', isEqualTo: teamName)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text('No matches available.'));
+        }
+
+        return ListView(
+          children: snapshot.data!.docs.map((doc) {
+            String date = doc['date'];
+            String formattedDate =
+                DateFormat('dd.MM.yyyy').format(DateTime.parse(date));
+            String team1Logo = doc['team1logo'];
+            int team1Score = int.parse(doc['team1score'].toString());
+            String team2Logo = doc['team2logo'];
+            int team2Score = int.parse(doc['team2score'].toString());
+
+            return Column(
+              children: [
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-
-                  // Table Tab Content
-                  Column(
+                  child: Column(
                     children: [
-                      // Header Row
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 10, bottom: 10, left: 20),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "#",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inversePrimary,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                      // Logo and score row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.network(
+                            team1Logo,
+                            width: 50,
+                            height: 50,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.error, size: 50);
+                            },
+                          ),
+                          const SizedBox(width: 20),
+                          Text(
+                            '$team1Score - $team2Score',
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
                             ),
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                "Team",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inversePrimary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 22),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "M",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inversePrimary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "W",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inversePrimary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "L",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inversePrimary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "P",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inversePrimary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(width: 20),
+                          Image.network(
+                            team2Logo,
+                            width: 50,
+                            height: 50,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.error, size: 50);
+                            },
+                          ),
+                        ],
                       ),
-                      Divider(
-                        thickness: 1,
-                        height: 1,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      // FirebaseAnimatedList for table data
-                      Expanded(
-                        child: FirebaseAnimatedList(
-                          query: databaseReference,
-                          itemBuilder: (context, snapshot, animation, index) {
-                            int placement =
-                                snapshot.child("placement").value as int;
-                            String teamName =
-                                snapshot.child("name").value.toString();
-                            bool isCurrentTeam = teamName == widget.teamName;
-
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: isCurrentTeam
-                                    ? Colors.yellow.withOpacity(0.3)
-                                    : Colors
-                                        .transparent, // Highlight current team
-                                borderRadius: BorderRadius.circular(
-                                    10), // Make the box rounded
-                              ),
-                              child: Column(
-                                children: [
-                                  ListTile(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    title: Row(
-                                      children: [
-                                        // Placement
-                                        Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            '$placement.',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ),
-                                        // Team name and logo
-                                        Expanded(
-                                          flex: 5,
-                                          child: Row(
-                                            children: [
-                                              Image.network(
-                                                snapshot
-                                                    .child("logo")
-                                                    .value
-                                                    .toString(),
-                                                width: 20,
-                                                height: 20,
-                                                errorBuilder: (context, error,
-                                                    stackTrace) {
-                                                  return const Icon(Icons.error,
-                                                      size: 20);
-                                                },
-                                              ),
-                                              const SizedBox(width: 5),
-                                              Text(
-                                                teamName,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        // Matches, Wins, Loses, Points
-                                        Expanded(
-                                          flex: 1,
-                                          child: Text(snapshot
-                                              .child("matches")
-                                              .value
-                                              .toString()),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Text(snapshot
-                                              .child("wins")
-                                              .value
-                                              .toString()),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Text(snapshot
-                                              .child("loses")
-                                              .value
-                                              .toString()),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            snapshot
-                                                .child("points")
-                                                .value
-                                                .toString(),
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    thickness: 1,
-                                    height: 1,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                      const SizedBox(height: 10),
+                      // Team names row
+                      // Date row
+                      Text(
+                        formattedDate,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(context).colorScheme.inversePrimary,
                         ),
                       ),
                     ],
                   ),
-                  // Lineup Tab Content
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'This is the Lineup section.',
-                      style: TextStyle(fontSize: 16),
-                    ),
+                ),
+                Divider(
+                  thickness: 1,
+                  height: 1,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .inversePrimary
+                      .withOpacity(0.1),
+                ),
+              ],
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+}
+
+class TableTabContent extends StatelessWidget {
+  final String teamName;
+
+  const TableTabContent({required this.teamName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Header Row
+        Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Text(
+                  "#",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                flex: 4,
+                child: Text(
+                  "Team",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 22),
+              Expanded(
+                flex: 1,
+                child: Text(
+                  "M",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Text(
+                  "W",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Text(
+                  "L",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Text(
+                  "P",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
+        Divider(
+          thickness: 1,
+          height: 1,
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        // FirebaseAnimatedList for table data
+        Expanded(
+          child: FirebaseAnimatedList(
+            query: FirebaseDatabase.instance.ref('table'),
+            itemBuilder: (context, snapshot, animation, index) {
+              int placement = snapshot.child("placement").value as int;
+              String teamName = snapshot.child("name").value.toString();
+              bool isCurrentTeam = teamName == this.teamName;
+
+              return Container(
+                decoration: BoxDecoration(
+                  color: isCurrentTeam
+                      ? Colors.yellow.withOpacity(0.3)
+                      : Colors.transparent, // Highlight current team
+                  borderRadius:
+                      BorderRadius.circular(10), // Make the box rounded
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 20),
+                      title: Row(
+                        children: [
+                          // Placement
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              '$placement.',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          // Team name and logo
+                          Expanded(
+                            flex: 5,
+                            child: Row(
+                              children: [
+                                Image.network(
+                                  snapshot.child("logo").value.toString(),
+                                  width: 20,
+                                  height: 20,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.error, size: 20);
+                                  },
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  teamName,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          // Matches, Wins, Loses, Points
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                                snapshot.child("matches").value.toString()),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child:
+                                Text(snapshot.child("wins").value.toString()),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child:
+                                Text(snapshot.child("loses").value.toString()),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              snapshot.child("points").value.toString(),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      thickness: 1,
+                      height: 1,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class LineupTabContent extends StatelessWidget {
+  const LineupTabContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text(
+        'This is the Lineup section.',
+        style: TextStyle(fontSize: 16),
       ),
     );
   }
