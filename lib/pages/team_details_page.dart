@@ -143,10 +143,8 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                           String formattedDate = DateFormat('dd.MM.yyyy')
                               .format(DateTime.parse(date));
                           String team1Logo = doc['team1logo'];
-                          String team1Name = doc['team1name'];
                           int team1Score =
                               int.parse(doc['team1score'].toString());
-                          String team2Name = doc['team2name'];
                           String team2Logo = doc['team2logo'];
                           int team2Score =
                               int.parse(doc['team2score'].toString());
@@ -182,18 +180,18 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return const Icon(Icons.error,
-                                                size: 40);
+                                                size: 60);
                                           },
                                         ),
-                                        const SizedBox(width: 10),
+                                        const SizedBox(width: 20),
                                         Text(
                                           '$team1Score - $team2Score',
                                           style: const TextStyle(
                                             fontSize: 22,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w900,
                                           ),
                                         ),
-                                        const SizedBox(width: 10),
+                                        const SizedBox(width: 20),
                                         Image.network(
                                           team2Logo,
                                           width: 60,
@@ -201,21 +199,13 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return const Icon(Icons.error,
-                                                size: 40);
+                                                size: 60);
                                           },
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 10),
                                     // Team names row
-                                    Text(
-                                      '$team1Name vs $team2Name',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 5),
                                     // Date row
                                     Text(
                                       formattedDate,
@@ -223,12 +213,18 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                                         fontSize: 14,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .secondary,
+                                            .inversePrimary,
                                       ),
                                     ),
                                   ],
                                 ),
+                                
                               ),
+                              Divider(
+                          thickness: 1,
+                          height: 1,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                             ],
                           );
                         }).toList(),
