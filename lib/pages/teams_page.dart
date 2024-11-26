@@ -29,41 +29,45 @@ class _TeamsPageState extends State<TeamsPage> {
             return const Center(child: Text('No teams available.'));
           }
 
-          return ListView(
-            children: snapshot.data!.docs.map((doc) {
-              String teamName = doc['name'];
-              String teamLogo = doc['logo'];
-              String teamStadium = doc['stadion'];
+          return Scrollbar(
+            child: ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                var doc = snapshot.data!.docs[index];
+                String teamName = doc['name'];
+                String teamLogo = doc['logo'];
+                String teamStadium = doc['stadion'];
 
-              return ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                leading: Image.network(
-                  teamLogo,
-                  width: 30,
-                  height: 30,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.error, size: 30);
-                  },
-                ),
-                title: Text(
-                  teamName,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                ),
-                onTap: () {
-                  // Navigate to the TeamDetailsPage with the selected team's data
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TeamDetailsPage(
-                        teamName: teamName,
-                        teamLogo: teamLogo,
-                        teamStadium: teamStadium,
+                return ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  leading: Image.network(
+                    teamLogo,
+                    width: 40,
+                    height: 40,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(Icons.error, size: 30);
+                    },
+                  ),
+                  title: Text(
+                    teamName,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  onTap: () {
+                    // Navigate to the TeamDetailsPage with the selected team's data
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TeamDetailsPage(
+                          teamName: teamName,
+                          teamLogo: teamLogo,
+                          teamStadium: teamStadium,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              );
-            }).toList(),
+                    );
+                  },
+                );
+              },
+            ),
           );
         },
       ),

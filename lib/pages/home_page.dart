@@ -279,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                         Divider(
                           thickness: 1,
                           height: 1,
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
                         ),
                       ],
                     );

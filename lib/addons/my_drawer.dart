@@ -186,7 +186,7 @@ class MyDrawer extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(25),
-            child: Divider(color: Theme.of(context).colorScheme.secondary),
+            child: Divider(color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5)),
           ),
           MyDrawerTitle(
             text: "Home",
