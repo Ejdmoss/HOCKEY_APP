@@ -51,76 +51,73 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       // Nastavujeme pozadí stránky podle aktuálního tématu.
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Logo TipsportExtraligy
-            Padding(
-              padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-              child: Image.asset(
-                'lib/images/ehl2.jpg',
-                height: 150,
-              ),
+      body: Stack(
+        children: [
+          // Background image with opacity
+          Opacity(
+            opacity: 0.2,
+            child: Image.asset(
+              'lib/images/ehl3.jpg',
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
             ),
-            // Úvodní zpráva, název aplikace.
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
-              child: Text(
-                "Let's create an account",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Pole pro zadání emailu.
-            MyTexfield(
-                controller: emailController,
-                hintText: "Email",
-                obscureText: false),
-            const SizedBox(height: 10),
-            // Pole pro zadání hesla.
-            MyTexfield(
-                controller: passwordController,
-                hintText: "Password",
-                obscureText: true),
-            const SizedBox(height: 10),
-            // Pole pro zadání kontrolního hesla.
-            MyTexfield(
-                controller: confirmPasswordController,
-                hintText: "Confirm password",
-                obscureText: true),
-            const SizedBox(height: 25),
-            // Tlačítko pro zaregistrování.
-            MyButton(text: "Sign Up", onTap: register),
-            const SizedBox(height: 25),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "already have an account?",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary),
-                ),
-                const SizedBox(width: 4),
-                // Odkaz pro přihlášení, který spustí funkci onTap.
-                GestureDetector(
-                  onTap: widget.onTap,
-                  child: Text(
-                    "Login now",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 75.0), // Added bottom padding
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Pole pro zadání emailu.
+                  MyTexfield(
+                      controller: emailController,
+                      hintText: "Email",
+                      obscureText: false),
+                  const SizedBox(height: 10),
+                  // Pole pro zadání hesla.
+                  MyTexfield(
+                      controller: passwordController,
+                      hintText: "Password",
+                      obscureText: true),
+                  const SizedBox(height: 10),
+                  // Pole pro zadání kontrolního hesla.
+                  MyTexfield(
+                      controller: confirmPasswordController,
+                      hintText: "Confirm password",
+                      obscureText: true),
+                  const SizedBox(height: 25),
+                  // Tlačítko pro zaregistrování.
+                  MyButton(text: "Sign Up", onTap: register),
+                  const SizedBox(height: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "already have an account?",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.inversePrimary),
+                      ),
+                      const SizedBox(width: 4),
+                      // Odkaz pro přihlášení, který spustí funkci onTap.
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: Text(
+                          "Login now",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.inversePrimary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
