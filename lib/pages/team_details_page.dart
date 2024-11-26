@@ -1,6 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class TeamDetailsPage extends StatefulWidget {
   final String teamName;
@@ -121,14 +123,146 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                 controller: _tabController,
                 children: [
                   // Matches Tab Content
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'This is the Matches section.',
-                      style: TextStyle(fontSize: 16),
-                    ),
+                  StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('matches')
+                        .where('team1name', isEqualTo: widget.teamName)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                        return const Center(child: Text('No matches available.'));
+                      }
+
+                      return ListView(
+                        children: snapshot.data!.docs.map((doc) {
+                          String date = doc['date'];
+                          String formattedDate = DateFormat('dd.MM. yyyy').format(DateTime.parse(date));
+                          String team1Logo = doc['team1logo'];
+                          String team1Name = doc['team1name'];
+                          int team1Score = int.parse(doc['team1score'].toString());
+                          String team2Name = doc['team2name'];
+                          String team2Logo = doc['team2logo'];
+                          int team2Score = int.parse(doc['team2score'].toString());
+
+                          return Column(
+                            children: [
+                              ListTile(
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                title: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 10.0),
+                                                child: Image.network(
+                                                  team1Logo,
+                                                  width: 30,
+                                                  height: 30,
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    return const Icon(Icons.error, size: 30);
+                                                  },
+                                                ),
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Expanded(
+                                                child: Text(
+                                                  team1Name,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 13,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  team1Score.toString(),
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        const Text(':', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                                        const SizedBox(width: 5),
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  team2Score.toString(),
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Expanded(
+                                                child: Text(
+                                                  team2Name,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 13,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 10.0),
+                                                child: Image.network(
+                                                  team2Logo,
+                                                  width: 30,
+                                                  height: 30,
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    return const Icon(Icons.error, size: 30);
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      formattedDate,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(
+                                thickness: 1,
+                                height: 1,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      );
+                    },
                   ),
-                   // Table Tab Content
+                  // Table Tab Content
                   Column(
                     children: [
                       // Header Row

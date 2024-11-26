@@ -16,8 +16,8 @@ class AuthService {
           .signInWithEmailAndPassword(email: email, password: password);
 
       return userCredential;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
+    } on FirebaseAuthException {
+      throw Exception("wrong email or password");
     }
   }
 
@@ -29,8 +29,8 @@ class AuthService {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       return userCredential;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
+    } on FirebaseAuthException {
+      throw Exception("wrong email or password");
     }
   }
 

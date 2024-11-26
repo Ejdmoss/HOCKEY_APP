@@ -4,7 +4,7 @@ import 'package:hockey_app/themes/light_mode.dart';
 
 // Třída ThemeProvider slouží k správě a poskytování aktuálního tématu aplikace.
 class ThemeProvider with ChangeNotifier {
-  ThemeData _themeData = lightMode;
+  ThemeData _themeData = darkMode;
   ThemeData get themeData => _themeData;
 
   // Kontroluje, zda je aktuální téma tmavé.
