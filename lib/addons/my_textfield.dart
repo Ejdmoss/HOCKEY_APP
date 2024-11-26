@@ -21,13 +21,13 @@ class MyTexfield extends StatelessWidget {
         obscureText: obscureText,
         decoration: InputDecoration(
           filled: true, // Added filled property
-          fillColor: Theme.of(context).colorScheme.secondary.withOpacity(0.8), // Added background color
+          fillColor: Theme.of(context).colorScheme.surface, // Added background color
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.secondary, width: 2.0)),
+                  color: Theme.of(context).colorScheme.surface, width: 2.0)),
           focusedBorder: OutlineInputBorder(
             borderSide:
-                BorderSide(color: Theme.of(context).colorScheme.secondary.withOpacity(0.8), width: 2.0),
+                BorderSide(color: Theme.of(context).colorScheme.surface, width: 2.0),
           ),
           hintText: hintText,
           hintStyle: TextStyle(

@@ -251,7 +251,7 @@ class MatchesTabContent extends StatelessWidget {
 class TableTabContent extends StatelessWidget {
   final String teamName;
 
-  const TableTabContent({required this.teamName});
+  const TableTabContent({super.key, required this.teamName});
 
   @override
   Widget build(BuildContext context) {
@@ -439,7 +439,7 @@ class TableTabContent extends StatelessWidget {
 }
 
 class LineupTabContent extends StatelessWidget {
-  const LineupTabContent();
+  const LineupTabContent({super.key});
 
   @override
   Widget build(BuildContext context) {
