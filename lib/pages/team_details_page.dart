@@ -40,8 +40,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -83,7 +82,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                     Text(
                       widget.teamName,
                       style: const TextStyle(
-                        fontSize: 24,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -91,7 +90,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                     Text(
                       'Arena: ${widget.teamStadium}',
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 15,
                         color: Theme.of(context).colorScheme.inversePrimary,
                         fontWeight: FontWeight.w500,
                       ),
@@ -105,9 +104,10 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
               controller: _tabController,
               indicatorColor: const Color.fromARGB(255, 20, 91, 168),
               labelColor: Theme.of(context).colorScheme.inversePrimary,
-              unselectedLabelColor: Theme.of(context).colorScheme.inversePrimary,
+              unselectedLabelColor:
+                  Theme.of(context).colorScheme.inversePrimary,
               labelStyle: const TextStyle(
-                fontSize: 14, 
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
               tabs: const [
@@ -133,128 +133,101 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                        return const Center(child: Text('No matches available.'));
+                        return const Center(
+                            child: Text('No matches available.'));
                       }
 
                       return ListView(
                         children: snapshot.data!.docs.map((doc) {
                           String date = doc['date'];
-                          String formattedDate = DateFormat('dd.MM. yyyy').format(DateTime.parse(date));
+                          String formattedDate = DateFormat('dd.MM.yyyy')
+                              .format(DateTime.parse(date));
                           String team1Logo = doc['team1logo'];
                           String team1Name = doc['team1name'];
-                          int team1Score = int.parse(doc['team1score'].toString());
+                          int team1Score =
+                              int.parse(doc['team1score'].toString());
                           String team2Name = doc['team2name'];
                           String team2Logo = doc['team2logo'];
-                          int team2Score = int.parse(doc['team2score'].toString());
+                          int team2Score =
+                              int.parse(doc['team2score'].toString());
 
                           return Column(
                             children: [
-                              ListTile(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                title: Column(
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 15),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 5,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
                                   children: [
+                                    // Logo and score row
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Expanded(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(left: 10.0),
-                                                child: Image.network(
-                                                  team1Logo,
-                                                  width: 30,
-                                                  height: 30,
-                                                  errorBuilder: (context, error, stackTrace) {
-                                                    return const Icon(Icons.error, size: 30);
-                                                  },
-                                                ),
-                                              ),
-                                              const SizedBox(width: 5),
-                                              Expanded(
-                                                child: Text(
-                                                  team1Name,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 13,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  team1Score.toString(),
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                        Image.network(
+                                          team1Logo,
+                                          width: 40,
+                                          height: 40,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(Icons.error,
+                                                size: 40);
+                                          },
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          '$team1Score - $team2Score',
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        const SizedBox(width: 5),
-                                        const Text(':', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                                        const SizedBox(width: 5),
-                                        Expanded(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  team2Score.toString(),
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 5),
-                                              Expanded(
-                                                child: Text(
-                                                  team2Name,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 13,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 5),
-                                              Padding(
-                                                padding: const EdgeInsets.only(left: 10.0),
-                                                child: Image.network(
-                                                  team2Logo,
-                                                  width: 30,
-                                                  height: 30,
-                                                  errorBuilder: (context, error, stackTrace) {
-                                                    return const Icon(Icons.error, size: 30);
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                        const SizedBox(width: 10),
+                                        Image.network(
+                                          team2Logo,
+                                          width: 40,
+                                          height: 40,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(Icons.error,
+                                                size: 40);
+                                          },
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 10),
+                                    // Team names row
+                                    Text(
+                                      '$team1Name vs $team2Name',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    // Date row
                                     Text(
                                       formattedDate,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              Divider(
-                                thickness: 1,
-                                height: 1,
-                                color: Theme.of(context).colorScheme.secondary,
                               ),
                             ],
                           );
@@ -262,12 +235,14 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                       );
                     },
                   ),
+
                   // Table Tab Content
                   Column(
                     children: [
                       // Header Row
                       Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 20),
                         child: Row(
                           children: [
                             Expanded(
@@ -275,7 +250,9 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                               child: Text(
                                 "#",
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -286,7 +263,9 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                               child: Text(
                                 "Team",
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -298,7 +277,9 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                               child: Text(
                                 "M",
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -309,7 +290,9 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                               child: Text(
                                 "W",
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -320,7 +303,9 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                               child: Text(
                                 "L",
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -331,7 +316,9 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                               child: Text(
                                 "P",
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -350,19 +337,26 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                         child: FirebaseAnimatedList(
                           query: databaseReference,
                           itemBuilder: (context, snapshot, animation, index) {
-                            int placement = snapshot.child("placement").value as int;
-                            String teamName = snapshot.child("name").value.toString();
+                            int placement =
+                                snapshot.child("placement").value as int;
+                            String teamName =
+                                snapshot.child("name").value.toString();
                             bool isCurrentTeam = teamName == widget.teamName;
 
                             return Container(
                               decoration: BoxDecoration(
-                                color: isCurrentTeam ? Colors.yellow.withOpacity(0.3) : Colors.transparent, // Highlight current team
-                                borderRadius: BorderRadius.circular(10), // Make the box rounded
+                                color: isCurrentTeam
+                                    ? Colors.yellow.withOpacity(0.3)
+                                    : Colors
+                                        .transparent, // Highlight current team
+                                borderRadius: BorderRadius.circular(
+                                    10), // Make the box rounded
                               ),
                               child: Column(
                                 children: [
                                   ListTile(
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
                                     title: Row(
                                       children: [
                                         // Placement
@@ -382,17 +376,24 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                                           child: Row(
                                             children: [
                                               Image.network(
-                                                snapshot.child("logo").value.toString(),
+                                                snapshot
+                                                    .child("logo")
+                                                    .value
+                                                    .toString(),
                                                 width: 20,
                                                 height: 20,
-                                                errorBuilder: (context, error, stackTrace) {
-                                                  return const Icon(Icons.error, size: 20);
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const Icon(Icons.error,
+                                                      size: 20);
                                                 },
                                               ),
                                               const SizedBox(width: 5),
                                               Text(
                                                 teamName,
-                                                style: const TextStyle(fontWeight: FontWeight.w600),
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w600),
                                               ),
                                             ],
                                           ),
@@ -401,21 +402,34 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                                         // Matches, Wins, Loses, Points
                                         Expanded(
                                           flex: 1,
-                                          child: Text(snapshot.child("matches").value.toString()),
+                                          child: Text(snapshot
+                                              .child("matches")
+                                              .value
+                                              .toString()),
                                         ),
                                         Expanded(
                                           flex: 1,
-                                          child: Text(snapshot.child("wins").value.toString()),
+                                          child: Text(snapshot
+                                              .child("wins")
+                                              .value
+                                              .toString()),
                                         ),
                                         Expanded(
                                           flex: 1,
-                                          child: Text(snapshot.child("loses").value.toString()),
+                                          child: Text(snapshot
+                                              .child("loses")
+                                              .value
+                                              .toString()),
                                         ),
                                         Expanded(
                                           flex: 1,
                                           child: Text(
-                                            snapshot.child("points").value.toString(),
-                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                            snapshot
+                                                .child("points")
+                                                .value
+                                                .toString(),
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                       ],
@@ -424,7 +438,8 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                                   Divider(
                                     thickness: 1,
                                     height: 1,
-                                    color: Theme.of(context).colorScheme.secondary,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                   ),
                                 ],
                               ),
