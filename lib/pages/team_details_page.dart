@@ -177,8 +177,8 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                                       children: [
                                         Image.network(
                                           team1Logo,
-                                          width: 40,
-                                          height: 40,
+                                          width: 60,
+                                          height: 60,
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return const Icon(Icons.error,
@@ -196,8 +196,8 @@ class _TeamDetailsPageState extends State<TeamDetailsPage>
                                         const SizedBox(width: 10),
                                         Image.network(
                                           team2Logo,
-                                          width: 40,
-                                          height: 40,
+                                          width: 60,
+                                          height: 60,
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return const Icon(Icons.error,
