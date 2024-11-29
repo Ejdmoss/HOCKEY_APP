@@ -54,9 +54,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Tipsport Extraliga",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        title: Image.asset(
+          'lib/images/ehl4.png',
+          height: 55,
         ),
         centerTitle: true,
         leading: Builder(
@@ -196,102 +196,105 @@ class _HomePageState extends State<HomePage> {
                   children: snapshot.data!.docs.map((doc) {
                     return Column(
                       children: [
-                        ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    // zobrazení loga týmu 1
-                                    Image.network(
-                                      doc["team1logo"] ?? "",
-                                      width: 30,
-                                      height: 30,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return const Icon(Icons.error,
-                                            size: 20);
-                                      },
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Expanded(
-                                      // zobrazení názvu týmu 1
-                                      child: Text(
-                                        doc["team1name"] ?? "Team 1",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13,
-                                        ),
-                                        textAlign: TextAlign.center,
+                        Card(
+                          elevation: 8,
+                          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // zobrazení loga týmu 1
+                                      Image.network(
+                                        doc["team1logo"] ?? "",
+                                        width: 40,
+                                        height: 40,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return const Icon(Icons.error, size: 30);
+                                        },
                                       ),
-                                    ),
-                                    // zobrazení skóre týmu 1
-                                    Expanded(
-                                      child: Text(
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        // zobrazení názvu týmu 1
+                                        child: Text(
+                                          doc["team1name"] ?? "Team 1",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      // zobrazení skóre týmu 1
+                                      const SizedBox(width: 5),
+                                      Text(
                                         doc["team1score"].toString(),
                                         textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                          color: Theme.of(context).colorScheme.secondary,
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 5),
-                              const Text(':',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold)),
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
+                                const SizedBox(width: 2),
+                                Text('-',
+                                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Theme.of(context).colorScheme.secondary,)),
+                                const SizedBox(width: 2),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
                                       // zobrazení skóre týmu 2
-                                      child: Text(
+                                      Text(
                                         doc["team2score"].toString(),
                                         textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                          color: Theme.of(context).colorScheme.secondary,
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Expanded(
-                                      // zobrazení názvu týmu 2
-                                      child: Text(
-                                        doc["team2name"] ?? "Team 2",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13,
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        // zobrazení názvu týmu 2
+                                        child: Text(
+                                          doc["team2name"] ?? "Team 2",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        textAlign: TextAlign.center,
                                       ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    // zobrazení loga týmu 2
-                                    Image.network(
-                                      doc["team2logo"] ?? "",
-                                      width: 30,
-                                      height: 30,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return const Icon(Icons.error,
-                                            size: 20);
-                                      },
-                                    ),
-                                  ],
+                                      const SizedBox(width: 5),
+                                      // zobrazení loga týmu 2
+                                      Image.network(
+                                        doc["team2logo"] ?? "",
+                                        width: 40,
+                                        height: 40,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return const Icon(Icons.error, size: 30);
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         // vytvoření oddělovače

@@ -8,7 +8,7 @@
 Tato aplikace je navržena pro fanoušky ledního hokeje, kteří chtějí sledovat výsledky, tabulky týmů, soupisky a další důležité informace o své oblíbené lize a týmech. Umožňuje uživatelům prohlížet aktuální výsledky, soupisky týmů a detaily jednotlivých hráčů. Je ideální jak pro fanoušky, tak pro ty, kteří chtějí mít přehled o své oblíbené hokejové lize.
 
 # Funkcionality
-- Výběr ligy: Uživatelé si mohou vybrat různé ligy, které sledují, například NHL, KHL nebo národní ligy.
+- Výběr ligy: Uživatelé si mohou vybrat různé ligy, které sledují, například NHL, EHL nebo národní ligy.
 - Tabulka týmů: Aplikace zobrazuje aktuální tabulku vybrané ligy včetně počtu bodů, výher, remíz a proher.
 - Detail týmů a soupisky: Možnost prohlédnout si detaily týmů včetně kompletních soupisek hráčů s informacemi jako pozice, věk, a statistiky.
 - Historie zápasů: Uživatelé mohou sledovat historii zápasů jednotlivých týmů, včetně výsledků a statistik.
