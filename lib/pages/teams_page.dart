@@ -18,7 +18,10 @@ class _TeamsPageState extends State<TeamsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Teams"),
+        title: Image.asset(
+          'lib/images/ehl4.png',
+          height: 55,
+        ),
         centerTitle: true,
       ),
       // zobrazení seznamu týmů
@@ -43,35 +46,49 @@ class _TeamsPageState extends State<TeamsPage> {
                 String teamLogo = doc['logo'];
                 String teamStadium = doc['stadion'];
                 // zobrazení jednotlivých týmů
-                return ListTile(
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  leading: Image.network(
-                    teamLogo,
-                    width: 40,
-                    height: 40,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.error, size: 30);
-                    },
-                  ),
-                  title: Text(
-                    teamName,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  onTap: () {
-                    // Navigace na stránku s detaily týmu
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TeamDetailsPage(
-                          teamName: teamName,
-                          teamLogo: teamLogo,
-                          teamStadium: teamStadium,
-                        ),
+                return Column(
+                  children: [
+                    Card(
+                      elevation: 8,
+                      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                    );
-                  },
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        leading: Image.network(
+                          teamLogo,
+                          width: 40,
+                          height: 40,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(Icons.error, size: 30);
+                          },
+                        ),
+                        title: Text(
+                          teamName,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        onTap: () {
+                          // Navigace na stránku s detaily týmu
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TeamDetailsPage(
+                                teamName: teamName,
+                                teamLogo: teamLogo,
+                                teamStadium: teamStadium,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Divider(
+                      thickness: 1,
+                      height: 1,
+                      color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
+                    ),
+                  ],
                 );
               },
             ),

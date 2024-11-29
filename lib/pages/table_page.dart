@@ -34,9 +34,9 @@ class _TablePageState extends State<TablePage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: const Text(
-          "Tipsport Extraliga",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        title: Image.asset(
+          'lib/images/ehl4.png',
+          height: 55,
         ),
         centerTitle: true,
       ),
