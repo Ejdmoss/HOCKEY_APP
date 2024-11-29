@@ -3,25 +3,28 @@ import 'package:hockey_app/addons/my_button.dart';
 import 'package:hockey_app/addons/my_textfield.dart';
 import 'package:hockey_app/sevices/auth/auth_service.dart';
 
+// vytvoření třídy LoginPage, která dědí od StatefulWidget
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
-
+  // konstruktor třídy LoginPage
   const LoginPage({super.key, required this.onTap});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
+// vytvoření třídy _LoginPageState, která dědí od State<LoginPage>
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  // metoda login, která zavolá metodu signInWithEmailAndPassword z třídy AuthService
   void login() async {
     final authService = AuthService();
-
+    // zavolání metody signInWithEmailAndPassword s parametry emailController.text a passwordController.text
     try {
       await authService.signInWithEmailAndPassword(
           emailController.text, passwordController.text);
+      // v případě chyby se zobrazí AlertDialog s chybovou hláškou
     } catch (e) {
       showDialog(
         // ignore: use_build_context_synchronously
@@ -33,56 +36,48 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void forgotPw() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text("User Tapped forgot password"),
-      ),
-    );
-  }
-
+  // metoda build, která vrací Scaffold s AppBar a tělem obsahujícím Stack s obrázkem a sloupcem s textovými poli a tlačítkem
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image with opacity
+          // přidání obrázku s průhledností
           Opacity(
-            opacity: 0.2, // Adjust opacity here
+            opacity: 0.2,
             child: Image.asset(
-              'lib/images/ehl3.jpg', // Update to your actual file path
+              'lib/images/ehl3.jpg',
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
             ),
           ),
-          // Main content
+          // sloupec s textovými poli a tlačítkem
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 75.0), // Added bottom padding
+              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 75.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Email input
+                  // vstup pro email
                   MyTexfield(
                     controller: emailController,
                     hintText: "Email",
                     obscureText: false,
                   ),
                   const SizedBox(height: 10),
-                  // Password input
+                  // vstup pro heslo
                   MyTexfield(
                     controller: passwordController,
                     hintText: "Password",
                     obscureText: true,
                   ),
                   const SizedBox(height: 25),
-                  // Sign-in button
+                  // přidání tlačítka s textem "Sign In" a funkcí login
                   MyButton(text: "Sign In", onTap: login),
                   const SizedBox(height: 25),
+                  // řádek s textem "Not a member?" a GestureDetector s textem "Register now" a funkcí onTap
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -93,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(width: 4),
+                      // přidání GestureDetector s textem "Register now" a funkcí onTap
                       GestureDetector(
                         onTap: widget.onTap,
                         child: Text(

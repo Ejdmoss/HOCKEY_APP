@@ -7,20 +7,24 @@ import 'package:hockey_app/pages/teams_page.dart';
 import 'package:hockey_app/sevices/auth/auth_service.dart';
 import 'package:hockey_app/pages/fill_data_page.dart';
 
+// vykreslení bočního menu
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
-
+// funkce pro odhlášení uživatele
   void logout() {
     final authService = AuthService();
     authService.signOut();
   }
 
+// vytvoření bočního menu
   @override
   Widget build(BuildContext context) {
+    // vytvoření bočního menu
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.surface,
       child: Column(
         children: [
+          // zobrazení loga týmu a přezdívky uživatele
           StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('currentUser')
@@ -71,16 +75,18 @@ class MyDrawer extends StatelessWidget {
                   ),
                 );
               }
-
+              // získání dat o uživateli
               return FutureBuilder<DocumentSnapshot>(
                 future: FirebaseFirestore.instance
                     .collection('currentUser')
                     .doc('data')
                     .get(),
                 builder: (context, userSnapshot) {
+                  // pokud se načítají data
                   if (userSnapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   }
+                  // pokud uživatel nemá přezdívku
                   if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
                     return Container(
                       padding: const EdgeInsets.only(top: 70, left: 15),
@@ -124,15 +130,15 @@ class MyDrawer extends StatelessWidget {
                       ),
                     );
                   }
-
+                  // získání dat o uživateli
                   var userData =
                       userSnapshot.data!.data() as Map<String, dynamic>;
                   String nickname = userData['nickname'] ?? 'No Nickname';
-
+                  // získání dat o týmu
                   var teamData = snapshot.data!.data() as Map<String, dynamic>;
                   String teamLogo = teamData['logo'];
                   String teamName = teamData['name'];
-
+                  // vytvoření loga týmu a přezdívky uživatele
                   return Container(
                     padding: const EdgeInsets.only(top: 70, left: 15),
                     margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -144,16 +150,18 @@ class MyDrawer extends StatelessWidget {
                             teamLogo,
                             width: 75,
                             height: 75,
+                            // pokud se logo nenačte
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
                                 'lib/images/ehl2.png',
                                 width: 75,
                                 height: 75,
-                              ); // Fallback image
+                              );
                             },
                           ),
                         ),
                         Column(
+                          // zobrazení přezdívky a jména týmu
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -184,10 +192,16 @@ class MyDrawer extends StatelessWidget {
               );
             },
           ),
+          // oddělení
           Padding(
             padding: const EdgeInsets.all(25),
-            child: Divider(color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5)),
+            child: Divider(
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.5)),
           ),
+          // titulky v bočním menu
           MyDrawerTitle(
             text: "Home",
             icon: Icons.home,
@@ -246,6 +260,7 @@ class MyDrawer extends StatelessWidget {
               );
             },
           ),
+          // vyvolaní funkce pro odhlášení uživatele
           MyDrawerTitle(text: "Log Out", icon: Icons.logout, onTap: logout),
           const SizedBox(height: 25),
         ],

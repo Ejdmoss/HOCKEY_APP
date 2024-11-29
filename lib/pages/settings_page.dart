@@ -4,50 +4,51 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hockey_app/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 
+// vykreslení stránky s nastaveními
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
-
+// vytvoření stavového objektu pro stránku s nastaveními
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
+// stavový objekt pro stránku s nastaveními
 class _SettingsPageState extends State<SettingsPage> {
-  String selectedTeamName = ''; // To store the selected team's name
-  String nickname = ''; // To store the entered nickname
-  bool isNicknameSubmitted = false; // To track if the nickname is submitted
+  String selectedTeamName = '';
+  String nickname = '';
+  bool isNicknameSubmitted = false;
 
-  // Method to save selected team data to Firestore
+  // Metoda pro uložení vybraného týmu do Firestore
   Future<void> saveSelectedTeamToDatabase(
       String teamName, String teamLogo) async {
     final CollectionReference currentUserCollection =
         FirebaseFirestore.instance.collection('currentUser');
 
     try {
-      // Adding or updating the chosen team document next to the data document
+      // Uložení vybraného týmu do Firestore
       await currentUserCollection.doc('chosenTeam').set({
         'name': teamName,
         'logo': teamLogo,
       });
-    // ignore: empty_catches
-    } catch (e) {
-    }
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
-  // Method to save nickname to Firestore
+  // metoda pro uložení přezdívky do databáze
   Future<void> saveNicknameToDatabase(String nickname) async {
     final DocumentReference currentUserDoc =
         FirebaseFirestore.instance.collection('currentUser').doc('data');
 
     try {
-      // Updating the currentUser document with the nickname
+      // Uložení přezdívky do Firestore
       await currentUserDoc.set({
         'nickname': nickname,
       });
-    // ignore: empty_catches
-    } catch (e) {
-    }
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
+  // vykreslení stránky s nastaveními
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Dark mode toggle
+                // Text pro výběr režimu
                 Text(
                   "Dark Mode",
                   style: TextStyle(
@@ -90,6 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
           ),
+          // Pole pro zadání přezdívky
           Padding(
             padding: const EdgeInsets.all(25),
             child: Container(
@@ -101,6 +103,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Pole pro zadání přezdívky
                   Expanded(
                     child: TextField(
                       decoration: const InputDecoration(
@@ -131,6 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ),
+          // Zobrazení potvrzení o odeslání přezdívky
           if (isNicknameSubmitted)
             Padding(
               padding: const EdgeInsets.only(top: 10),
@@ -142,6 +146,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
+          // Text pro výběr oblíbeného týmu
           Padding(
             padding: const EdgeInsets.only(top: 25, bottom: 20),
             child: Text(
@@ -153,19 +158,20 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ),
-          // Fetching and displaying team logos
+          // Výběr oblíbeného týmu
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance.collection('teams').snapshots(),
             builder: (context, snapshot) {
+              // Zobrazení načítání
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return const Center(child: Text('No teams available.'));
               }
-
+              // Výběr týmu
               return Wrap(
-                spacing: 8, // Adjusted for better spacing
+                spacing: 8,
                 runSpacing: 8,
                 alignment: WrapAlignment.center,
                 children: snapshot.data!.docs.map((doc) {
@@ -177,14 +183,14 @@ class _SettingsPageState extends State<SettingsPage> {
                       setState(() {
                         selectedTeamName = teamName;
                       });
-                      // Save selected team to Firestore
+                      // Uložení vybraného týmu do Firestore
                       saveSelectedTeamToDatabase(teamName, teamLogo);
                     },
                     child: Column(
                       children: [
                         Container(
-                          width: 45, // Reduced width
-                          height: 45, // Reduced height
+                          width: 45,
+                          height: 45,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             boxShadow: [
@@ -212,7 +218,8 @@ class _SettingsPageState extends State<SettingsPage> {
               );
             },
           ),
-          if (selectedTeamName.isNotEmpty) // Display selected team name
+          // Zobrazení vybraného týmu
+          if (selectedTeamName.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Text(

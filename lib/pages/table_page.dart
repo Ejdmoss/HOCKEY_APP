@@ -2,15 +2,18 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
+// vykreslení stránky s tabulkou
 class TablePage extends StatefulWidget {
   const TablePage({super.key});
-
+// vytvoření stavového objektu pro stránku s tabulkou
   @override
   State<TablePage> createState() => _TablePageState();
 }
 
+// stavový objekt pro stránku s tabulkou
 final databaseReference = FirebaseDatabase.instance.ref('table');
 
+// metoda pro získání barvy řádku podle umístění
 class _TablePageState extends State<TablePage> {
   Color getRowColor(int placement) {
     if (placement <= 4) {
@@ -25,17 +28,21 @@ class _TablePageState extends State<TablePage> {
     return const Color.fromARGB(255, 25, 24, 40); // Default color
   }
 
+// vykreslení stránky s tabulkou
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: const Text("Tipsport Extraliga", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-          centerTitle: true,
+        title: const Text(
+          "Tipsport Extraliga",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        centerTitle: true,
       ),
       body: Column(
         children: [
-          // La Liga Logo
+          // Header obrázek
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
@@ -47,6 +54,7 @@ class _TablePageState extends State<TablePage> {
                   fit: BoxFit.cover,
                 ),
               ),
+              // vrstva s průhledností
               child: Stack(
                 children: [
                   Container(
@@ -59,13 +67,14 @@ class _TablePageState extends State<TablePage> {
               ),
             ),
           ),
-          // Header row
+          // Header tabulka
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
             child: Row(
               children: [
                 Expanded(
                   flex: 1,
+                  // vykreslení pořadí
                   child: Text(
                     "#",
                     style: TextStyle(
@@ -75,6 +84,7 @@ class _TablePageState extends State<TablePage> {
                     ),
                   ),
                 ),
+                // vykreslení názvu týmu
                 Expanded(
                   flex: 4,
                   child: Text(
@@ -87,6 +97,7 @@ class _TablePageState extends State<TablePage> {
                   ),
                 ),
                 const SizedBox(width: 40),
+                // vykreslení počtu zápasů
                 Expanded(
                   flex: 1,
                   child: Text(
@@ -98,6 +109,7 @@ class _TablePageState extends State<TablePage> {
                     ),
                   ),
                 ),
+                // vykreslení počtu výher
                 Expanded(
                   flex: 1,
                   child: Text(
@@ -109,6 +121,7 @@ class _TablePageState extends State<TablePage> {
                     ),
                   ),
                 ),
+                // vykreslení počtu proher
                 Expanded(
                   flex: 1,
                   child: Text(
@@ -120,6 +133,7 @@ class _TablePageState extends State<TablePage> {
                     ),
                   ),
                 ),
+                // vykreslení počtu bodů
                 Expanded(
                   flex: 1,
                   child: Text(
@@ -134,13 +148,14 @@ class _TablePageState extends State<TablePage> {
               ],
             ),
           ),
+          // oddělení
           Divider(
             thickness: 1,
             height: 1,
             color: Theme.of(context).colorScheme.secondary,
           ),
 
-          // Data rows
+          // Tabulka
           Expanded(
             child: FirebaseAnimatedList(
               query: databaseReference,
@@ -152,17 +167,17 @@ class _TablePageState extends State<TablePage> {
                       contentPadding: const EdgeInsets.only(left: 20, right: 5),
                       title: Row(
                         children: [
-                          // Colored strap with rounded corners before the placement
+                          // barva řádku pořadí týmu
                           Container(
-                            width: 7, // Width of the strap
-                            height: 40, // Height of the strap
+                            width: 7,
+                            height: 40,
                             decoration: BoxDecoration(
                               color: getRowColor(placement),
-                              borderRadius:
-                                  BorderRadius.circular(5), // Rounded corners
+                              borderRadius: BorderRadius.circular(5),
                             ),
                           ),
                           const SizedBox(width: 5),
+                          // pořadí týmu
                           Expanded(
                             flex: 1,
                             child: Text(
@@ -177,22 +192,18 @@ class _TablePageState extends State<TablePage> {
                             flex: 5,
                             child: Row(
                               children: [
-                                // Use Image.network to load the logo from the URL provided in the database
+                                // logo týmu
                                 Image.network(
-                                  snapshot
-                                      .child("logo")
-                                      .value
-                                      .toString(), // Assuming this gives the URL of the logo
+                                  snapshot.child("logo").value.toString(),
                                   width: 20,
                                   height: 20,
                                   errorBuilder: (context, error, stackTrace) {
-                                    // Placeholder in case of an error loading the image
-                                    return const Icon(Icons.error,
-                                        size:
-                                            20); // Replace with any error widget you prefer
+                                    // pokud se logo nenačte, zobrazí se ikona chyby
+                                    return const Icon(Icons.error, size: 20);
                                   },
                                 ),
                                 const SizedBox(width: 5),
+                                // název týmu
                                 Text(
                                   snapshot.child("name").value.toString(),
                                   style: const TextStyle(
@@ -202,24 +213,28 @@ class _TablePageState extends State<TablePage> {
                             ),
                           ),
                           const SizedBox(width: 10),
+                          // počet zápasů, výher, proher a bodů
                           Expanded(
                             flex: 1,
                             child: Text(
                               snapshot.child("matches").value.toString(),
                             ),
                           ),
+                          // počet výher
                           Expanded(
                             flex: 1,
                             child: Text(
                               snapshot.child("wins").value.toString(),
                             ),
                           ),
+                          // počet proher
                           Expanded(
                             flex: 1,
                             child: Text(
                               snapshot.child("loses").value.toString(),
                             ),
                           ),
+                          // počet bodů
                           Expanded(
                             flex: 1,
                             child: Text(
@@ -231,6 +246,7 @@ class _TablePageState extends State<TablePage> {
                         ],
                       ),
                     ),
+                    // oddělení
                     Divider(
                       thickness: 1,
                       height: 1,
@@ -242,20 +258,20 @@ class _TablePageState extends State<TablePage> {
             ),
           ),
 
-          // Color Legend
+          // Legenda
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // First box
+                // První box
                 Row(
                   children: [
                     Container(
                       width: 20,
                       height: 20,
                       decoration: BoxDecoration(
-                        color: getRowColor(1), // Color for top teams
+                        color: getRowColor(1),
                         borderRadius: BorderRadius.circular(5),
                       ),
                     ),
@@ -263,14 +279,14 @@ class _TablePageState extends State<TablePage> {
                     const Text("Quarterfinals"),
                   ],
                 ),
-                // Second box
+                // Druhý box
                 Row(
                   children: [
                     Container(
                       width: 20,
                       height: 20,
                       decoration: BoxDecoration(
-                        color: getRowColor(6), // Color for mid-tier teams
+                        color: getRowColor(6),
                         borderRadius: BorderRadius.circular(5),
                       ),
                     ),
@@ -278,17 +294,18 @@ class _TablePageState extends State<TablePage> {
                     const Text("Eight-finals"),
                   ],
                 ),
-                // Third box
+                // Třetí box
                 Row(
                   children: [
                     Container(
                       width: 20,
                       height: 20,
                       decoration: BoxDecoration(
-                        color: getRowColor(14), // Color for bottom teams
+                        color: getRowColor(14),
                         borderRadius: BorderRadius.circular(5),
                       ),
                     ),
+                    // baráž
                     const SizedBox(width: 5),
                     const Text("Barrage"),
                   ],

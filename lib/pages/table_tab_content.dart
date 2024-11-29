@@ -1,24 +1,25 @@
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
+// vykreslení tabulky
 class TableTabContent extends StatelessWidget {
   final String teamName;
-
+// konstruktor obsahu záložky tabulky
   const TableTabContent({super.key, required this.teamName});
-
+// vykreslení tabulky
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Header Row
+        // Název tabulky
         Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
           child: Row(
             children: [
               Expanded(
                 flex: 1,
+                // Pořadí
                 child: Text(
                   "#",
                   style: TextStyle(
@@ -28,6 +29,7 @@ class TableTabContent extends StatelessWidget {
                   ),
                 ),
               ),
+              // Název týmu
               Expanded(
                 flex: 4,
                 child: Text(
@@ -40,6 +42,7 @@ class TableTabContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 22),
+              // Počet zápasů
               Expanded(
                 flex: 1,
                 child: Text(
@@ -51,6 +54,7 @@ class TableTabContent extends StatelessWidget {
                   ),
                 ),
               ),
+              // Počet výher
               Expanded(
                 flex: 1,
                 child: Text(
@@ -62,6 +66,7 @@ class TableTabContent extends StatelessWidget {
                   ),
                 ),
               ),
+              // Počet proher
               Expanded(
                 flex: 1,
                 child: Text(
@@ -73,6 +78,7 @@ class TableTabContent extends StatelessWidget {
                   ),
                 ),
               ),
+              // Počet bodů
               Expanded(
                 flex: 1,
                 child: Text(
@@ -87,12 +93,13 @@ class TableTabContent extends StatelessWidget {
             ],
           ),
         ),
+        // Oddělovač
         Divider(
           thickness: 1,
           height: 1,
           color: Theme.of(context).colorScheme.secondary,
         ),
-        // FirebaseAnimatedList for table data
+        // Seznam týmů
         Expanded(
           child: FirebaseAnimatedList(
             query: FirebaseDatabase.instance.ref('table'),
@@ -100,14 +107,14 @@ class TableTabContent extends StatelessWidget {
               int placement = snapshot.child("placement").value as int;
               String teamName = snapshot.child("name").value.toString();
               bool isCurrentTeam = teamName == this.teamName;
-
+              // Vykreslení řádku tabulky
               return Container(
+                // Zvýraznění řádku, pokud je tým zvolený
                 decoration: BoxDecoration(
                   color: isCurrentTeam
                       ? Colors.yellow.withOpacity(0.3)
-                      : Colors.transparent, // Highlight current team
-                  borderRadius:
-                      BorderRadius.circular(10), // Make the box rounded
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
                   children: [
@@ -116,7 +123,7 @@ class TableTabContent extends StatelessWidget {
                           const EdgeInsets.symmetric(horizontal: 20),
                       title: Row(
                         children: [
-                          // Placement
+                          // Pořadí
                           Expanded(
                             flex: 1,
                             child: Text(
@@ -127,7 +134,7 @@ class TableTabContent extends StatelessWidget {
                               ),
                             ),
                           ),
-                          // Team name and logo
+                          // Název týmu a logo
                           Expanded(
                             flex: 5,
                             child: Row(
@@ -150,7 +157,7 @@ class TableTabContent extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 10),
-                          // Matches, Wins, Loses, Points
+                          // Počet zápasů, výher, proher a bodů
                           Expanded(
                             flex: 1,
                             child: Text(
@@ -177,6 +184,7 @@ class TableTabContent extends StatelessWidget {
                         ],
                       ),
                     ),
+                    // Oddělovač
                     Divider(
                       thickness: 1,
                       height: 1,

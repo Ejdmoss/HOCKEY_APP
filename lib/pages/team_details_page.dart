@@ -4,26 +4,28 @@ import 'package:hockey_app/pages/matches_tab_content.dart';
 import 'package:hockey_app/pages/table_tab_content.dart';
 import 'package:hockey_app/addons/bottom_navigation_bar.dart';
 
+// vykreslení stránky s detaily týmu
 class TeamDetailsPage extends StatefulWidget {
   final String teamName;
   final String teamLogo;
   final String teamStadium;
-
+  // konstruktor stránky s detaily týmu
   const TeamDetailsPage({
     super.key,
     required this.teamName,
     required this.teamLogo,
     required this.teamStadium,
   });
-
+// vytvoření stavového objektu pro stránku s detaily týmu
   @override
   State<TeamDetailsPage> createState() => _TeamDetailsPageState();
 }
 
+// stavový objekt pro stránku s detaily týmu
 class _TeamDetailsPageState extends State<TeamDetailsPage> {
   int _selectedIndex = 0;
   final databaseReference = FirebaseDatabase.instance.ref('table');
-
+// inicializace stavového objektu
   @override
   void initState() {
     super.initState();
@@ -35,6 +37,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
     });
   }
 
+// vykreslení stránky s detaily týmu
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +50,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Logo with border radius and shadow
+                // Logo týmu a informace o stadionu
                 Container(
                   width: 80,
                   height: 80,
@@ -61,6 +64,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
                       ),
                     ],
                   ),
+                  // Načtení obrázku z URL
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
@@ -73,7 +77,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
                   ),
                 ),
                 const SizedBox(width: 20),
-                // Team name and stadium information
+                // Název týmu a stadion
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -85,6 +89,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
                       ),
                     ),
                     const SizedBox(height: 8),
+                    // Text s informacemi o stadionu
                     Text(
                       'Arena: ${widget.teamStadium}',
                       style: TextStyle(
@@ -97,6 +102,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
                 ),
               ],
             ),
+            // Oddělovač
             const SizedBox(height: 20),
             Divider(
               thickness: 1,
@@ -114,6 +120,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
           ],
         ),
       ),
+      // Dolní navigační lišta
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
@@ -122,9 +129,10 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
   }
 }
 
+// třída pro zobrazení obsahu záložky s soupiskou
 class LineupTabContent extends StatelessWidget {
   const LineupTabContent({super.key});
-
+// vykreslení obsahu záložky s soupiskou
   @override
   Widget build(BuildContext context) {
     return const Padding(

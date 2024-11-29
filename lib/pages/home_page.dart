@@ -3,18 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:hockey_app/addons/my_drawer.dart';
 import 'package:intl/intl.dart';
 
+// vytvoření třídy HomePage
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  // vygenerování stavu třídy HomePage
   State<HomePage> createState() => _HomePageState();
 }
 
+// vytvoření třídy _HomePageState
 class _HomePageState extends State<HomePage> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   DateTime selectedDate = DateTime.now();
   int selectedMonthIndex = DateTime.now().month - 1;
-
+  // vytvoření seznamu měsíců
   final List<String> monthNames = [
     'January',
     'February',
@@ -29,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     'November',
     'December'
   ];
-
+  // vytvoření metody getGamesForDate
   Stream<QuerySnapshot> getGamesForDate(DateTime date) {
     String formattedDate = DateFormat('yyyy-MM-dd').format(date);
     return firestore
@@ -38,6 +41,7 @@ class _HomePageState extends State<HomePage> {
         .snapshots();
   }
 
+  // vytvoření metody updateMonth
   void updateMonth(int index) {
     setState(() {
       selectedMonthIndex = index;
@@ -45,6 +49,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // vytvoření metody build
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,6 +70,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+      // vyvolání metody MyDrawer
       drawer: const MyDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,6 +82,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 GestureDetector(
                   onTap: () {
+                    // vytvoření dialogu pro výběr měsíce
                     showMenu(
                       context: context,
                       position:
@@ -94,6 +101,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: Row(
                     children: [
+                      // zobrazení vybraného měsíce
                       Text(
                         DateFormat('MMMM yyyy').format(selectedDate),
                         style: TextStyle(
@@ -112,6 +120,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
+          // vytvoření řádku s daty
           Container(
             height: 60,
             margin: const EdgeInsets.symmetric(vertical: 8),
@@ -167,19 +176,22 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          // vytvoření seznamu zápasů
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
+              // získání dat z databáze
               stream: getGamesForDate(selectedDate),
+              // zobrazení dat
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-
+                // zobrazení zprávy, pokud nejsou k dispozici žádné zápasy
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(
                       child: Text('No games available for this date.'));
                 }
-
+                // zobrazení seznamu zápasů
                 return ListView(
                   children: snapshot.data!.docs.map((doc) {
                     return Column(
@@ -194,6 +206,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    // zobrazení loga týmu 1
                                     Image.network(
                                       doc["team1logo"] ?? "",
                                       width: 30,
@@ -206,6 +219,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     const SizedBox(width: 5),
                                     Expanded(
+                                      // zobrazení názvu týmu 1
                                       child: Text(
                                         doc["team1name"] ?? "Team 1",
                                         style: const TextStyle(
@@ -215,6 +229,7 @@ class _HomePageState extends State<HomePage> {
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
+                                    // zobrazení skóre týmu 1
                                     Expanded(
                                       child: Text(
                                         doc["team1score"].toString(),
@@ -239,6 +254,7 @@ class _HomePageState extends State<HomePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Expanded(
+                                      // zobrazení skóre týmu 2
                                       child: Text(
                                         doc["team2score"].toString(),
                                         textAlign: TextAlign.center,
@@ -250,6 +266,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     const SizedBox(width: 5),
                                     Expanded(
+                                      // zobrazení názvu týmu 2
                                       child: Text(
                                         doc["team2name"] ?? "Team 2",
                                         style: const TextStyle(
@@ -260,6 +277,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     const SizedBox(width: 5),
+                                    // zobrazení loga týmu 2
                                     Image.network(
                                       doc["team2logo"] ?? "",
                                       width: 30,
@@ -276,10 +294,14 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
+                        // vytvoření oddělovače
                         Divider(
                           thickness: 1,
                           height: 1,
-                          color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .inversePrimary
+                              .withOpacity(0.1),
                         ),
                       ],
                     );
@@ -288,6 +310,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
+          // vytvoření obrázku
           Padding(
             padding: const EdgeInsets.only(bottom: 35, left: 15, right: 15),
             child: Container(
@@ -295,10 +318,11 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 image: const DecorationImage(
-                  image: AssetImage('lib/images/ehl2.jpg'), // Background image
+                  image: AssetImage('lib/images/ehl2.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
+              // vytvoření vrstvy
               child: Stack(
                 children: [
                   Container(

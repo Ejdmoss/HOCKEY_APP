@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hockey_app/addons/my_textfield.dart';
 
+// vytvoření třídy FillDataPage
 class FillDataPage extends StatefulWidget {
   const FillDataPage({super.key});
 
@@ -10,34 +11,33 @@ class FillDataPage extends StatefulWidget {
   _FillDataPageState createState() => _FillDataPageState();
 }
 
+// vytvoření třídy _FillDataPageState
 class _FillDataPageState extends State<FillDataPage> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _team1NameController = TextEditingController();
   final TextEditingController _team1ScoreController = TextEditingController();
   final TextEditingController _team2NameController = TextEditingController();
   final TextEditingController _team2ScoreController = TextEditingController();
-
+// vytvoření metody _saveData
   void _saveData() async {
     try {
-      // Fetch team1 logo
+      // Získání dat týmu 1
       var team1Snapshot = await FirebaseFirestore.instance
           .collection('teams')
           .where('name', isEqualTo: _team1NameController.text)
           .get();
-      var team1Logo = team1Snapshot.docs.isNotEmpty
-          ? team1Snapshot.docs.first['logo']
-          : '';
+      var team1Logo =
+          team1Snapshot.docs.isNotEmpty ? team1Snapshot.docs.first['logo'] : '';
 
-      // Fetch team2 logo
+      // Získání dat týmu 2
       var team2Snapshot = await FirebaseFirestore.instance
           .collection('teams')
           .where('name', isEqualTo: _team2NameController.text)
           .get();
-      var team2Logo = team2Snapshot.docs.isNotEmpty
-          ? team2Snapshot.docs.first['logo']
-          : '';
+      var team2Logo =
+          team2Snapshot.docs.isNotEmpty ? team2Snapshot.docs.first['logo'] : '';
 
-      // Save match data
+      // Uložení dat do Firestore
       await FirebaseFirestore.instance.collection('matches').add({
         'date': _dateController.text,
         'team1name': _team1NameController.text,
@@ -52,6 +52,7 @@ class _FillDataPageState extends State<FillDataPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Data saved successfully')),
       );
+      // Vyčištění polí
       _dateController.clear();
       _team1NameController.clear();
       _team1ScoreController.clear();
@@ -65,16 +66,19 @@ class _FillDataPageState extends State<FillDataPage> {
     }
   }
 
+  // vytvoření metody build
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // Název stránky
         title: const Text('Fill Data'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Vytvoření textových polí pro zadání dat
             MyTexfield(
               controller: _dateController,
               hintText: 'Date (yyyy-mm-dd)',

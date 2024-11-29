@@ -23,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void register() async {
     final authService = AuthService();
-
+    // Kontrola, zda se hesla shodují.
     if (passwordController.text == confirmPasswordController.text) {
       try {
         await authService.signUpWithEmailAndPassword(
@@ -36,6 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         );
       }
+      // Pokud je registrace úspěšná, zavře se dialog a uživatel je přesměrován na přihlašovací stránku.
     } else {
       showDialog(
         context: context,
@@ -53,7 +54,7 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
-          // Background image with opacity
+          // Pozadí stránky
           Opacity(
             opacity: 0.2,
             child: Image.asset(
@@ -66,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 75.0), // Added bottom padding
+              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 75.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -97,7 +98,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       Text(
                         "already have an account?",
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.inversePrimary),
+                            color:
+                                Theme.of(context).colorScheme.inversePrimary),
                       ),
                       const SizedBox(width: 4),
                       // Odkaz pro přihlášení, který spustí funkci onTap.
@@ -106,7 +108,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Text(
                           "Login now",
                           style: TextStyle(
-                              color: Theme.of(context).colorScheme.inversePrimary,
+                              color:
+                                  Theme.of(context).colorScheme.inversePrimary,
                               fontWeight: FontWeight.bold,
                               fontSize: 16),
                         ),

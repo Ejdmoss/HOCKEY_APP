@@ -1,20 +1,23 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+// vykreslení obsahu záložky zápasů
 class MatchesTabContent extends StatelessWidget {
   final String teamName;
-
+// konstruktor obsahu záložky zápasů
   const MatchesTabContent({super.key, required this.teamName});
-
+// vytvoření streamu pro získání dat z databáze
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
+      // získání dat z kolekce matches, kde je tým1 roven zadanému týmu
       stream: FirebaseFirestore.instance
           .collection('matches')
+          // porovnání týmu1 s názvem zadaného týmu
           .where('team1name', isEqualTo: teamName)
           .snapshots(),
+      // vykreslení dat
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -22,7 +25,7 @@ class MatchesTabContent extends StatelessWidget {
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(child: Text('No matches available.'));
         }
-
+        // vykreslení seznamu zápasů
         return ListView(
           children: snapshot.data!.docs.map((doc) {
             String date = doc['date'];
@@ -32,7 +35,7 @@ class MatchesTabContent extends StatelessWidget {
             int team1Score = int.parse(doc['team1score'].toString());
             String team2Logo = doc['team2logo'];
             int team2Score = int.parse(doc['team2score'].toString());
-
+            // vykreslení jednoho zápasu
             return Column(
               children: [
                 Container(
@@ -52,7 +55,7 @@ class MatchesTabContent extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      // Logo and score row
+                      // logo týmů a skóre
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -84,8 +87,6 @@ class MatchesTabContent extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      // Team names row
-                      // Date row
                       Text(
                         formattedDate,
                         style: TextStyle(
