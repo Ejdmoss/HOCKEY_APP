@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+// vykreslení světlého režimu
 ThemeData lightMode = ThemeData(
   colorScheme: ColorScheme.light(
     surface: Colors.grey.shade100,

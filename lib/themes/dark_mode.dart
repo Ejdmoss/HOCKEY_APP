@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+// vykreslení temného režimu
 ThemeData darkMode = ThemeData(
   colorScheme: const ColorScheme.dark(
     surface: Color.fromARGB(255, 28, 35, 39),
