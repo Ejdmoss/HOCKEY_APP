@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Icon(
                         Icons.arrow_drop_down,
-                        color: Theme.of(context).colorScheme.inversePrimary,
+                        color: const Color.fromARGB(255,0,88,159).withOpacity(0.3),
                       ),
                     ],
                   ),
@@ -198,7 +198,8 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Card(
                           elevation: 8,
-                          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -216,8 +217,10 @@ class _HomePageState extends State<HomePage> {
                                         doc["team1logo"] ?? "",
                                         width: 40,
                                         height: 40,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return const Icon(Icons.error, size: 30);
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return const Icon(Icons.error,
+                                              size: 30);
                                         },
                                       ),
                                       const SizedBox(width: 5),
@@ -242,7 +245,9 @@ class _HomePageState extends State<HomePage> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 17,
-                                          color: Theme.of(context).colorScheme.secondary,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                         ),
                                       ),
                                     ],
@@ -250,7 +255,13 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 const SizedBox(width: 2),
                                 Text('-',
-                                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Theme.of(context).colorScheme.secondary,)),
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    )),
                                 const SizedBox(width: 2),
                                 Expanded(
                                   child: Row(
@@ -263,7 +274,9 @@ class _HomePageState extends State<HomePage> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 17,
-                                          color: Theme.of(context).colorScheme.secondary,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                         ),
                                       ),
                                       const SizedBox(width: 5),
@@ -286,8 +299,10 @@ class _HomePageState extends State<HomePage> {
                                         doc["team2logo"] ?? "",
                                         width: 40,
                                         height: 40,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return const Icon(Icons.error, size: 30);
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return const Icon(Icons.error,
+                                              size: 30);
                                         },
                                       ),
                                     ],

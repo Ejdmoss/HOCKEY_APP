@@ -178,7 +178,7 @@ class MyDrawer extends StatelessWidget {
                             Text(
                               teamName,
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
+                                color: Theme.of(context).colorScheme.secondary,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -198,7 +198,7 @@ class MyDrawer extends StatelessWidget {
             child: Divider(
                 color: Theme.of(context)
                     .colorScheme
-                    .inversePrimary
+                    .primary
                     .withOpacity(0.5)),
           ),
           // titulky v bočním menu
@@ -261,7 +261,7 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           // vyvolaní funkce pro odhlášení uživatele
-          MyDrawerTitle(text: "Log Out", icon: Icons.logout, onTap: logout),
+          MyDrawerTitle(text: "Log Out", icon: Icons.logout, onTap: logout,),
           const SizedBox(height: 25),
         ],
       ),

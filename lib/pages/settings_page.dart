@@ -65,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(12),
             ),
             margin: const EdgeInsets.only(left: 25, top: 10, right: 25),
@@ -96,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.all(25),
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: const EdgeInsets.all(25),
