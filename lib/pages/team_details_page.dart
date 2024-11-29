@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:hockey_app/addons/matches_tab_content.dart';
-import 'package:hockey_app/addons/table_tab_content.dart';
+import 'package:hockey_app/pages/matches_tab_content.dart';
+import 'package:hockey_app/pages/table_tab_content.dart';
 import 'package:hockey_app/addons/bottom_navigation_bar.dart';
 
 class TeamDetailsPage extends StatefulWidget {
