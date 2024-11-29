@@ -18,14 +18,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
       items: const [
         // ikony pro navigaci
         BottomNavigationBarItem(
-          icon: Icon(Icons.sports_hockey),
-          // zápasy
-          label: 'Matches',
-        ),
-        BottomNavigationBarItem(
           icon: Icon(Icons.table_chart),
           // tabulka
           label: 'Table',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.sports_hockey),
+          // zápasy
+          label: 'Matches',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.people),
@@ -35,7 +35,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       ],
       currentIndex: selectedIndex,
       // vybrana barva ikon a textu
-      selectedItemColor: Theme.of(context).colorScheme.onPrimary,
+      selectedItemColor: const Color.fromARGB(255,0,88,159).withOpacity(0.3),
       unselectedItemColor: Theme.of(context).colorScheme.inversePrimary,
       onTap: onItemTapped,
     );

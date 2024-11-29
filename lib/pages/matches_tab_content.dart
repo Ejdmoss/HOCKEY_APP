@@ -11,11 +11,16 @@ class MatchesTabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      // získání dat z kolekce matches, kde je tým1 roven zadanému týmu
+      // získání dat z kolekce matches, kde je tým1 nebo tým2 roven zadanému týmu
       stream: FirebaseFirestore.instance
           .collection('matches')
-          // porovnání týmu1 s názvem zadaného týmu
-          .where('team1name', isEqualTo: teamName)
+          // porovnání týmu1 nebo týmu2 s názvem zadaného týmu
+          .where(
+            Filter.or(
+              Filter('team1name', isEqualTo: teamName),
+              Filter('team2name', isEqualTo: teamName),
+            ),
+          )
           .snapshots(),
       // vykreslení dat
       builder: (context, snapshot) {
