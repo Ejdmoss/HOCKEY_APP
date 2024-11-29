@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hockey_app/addons/my_drawer_title.dart';
+import 'package:hockey_app/pages/archive_page.dart';
 import 'package:hockey_app/pages/settings_page.dart';
 import 'package:hockey_app/pages/table_page.dart';
 import 'package:hockey_app/pages/teams_page.dart';
@@ -229,6 +230,19 @@ class MyDrawer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const TablePage(),
+                ),
+              );
+            },
+          ),
+          MyDrawerTitle(
+            text: "Archive",
+            icon: Icons.archive,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ArchivePage(),
                 ),
               );
             },
