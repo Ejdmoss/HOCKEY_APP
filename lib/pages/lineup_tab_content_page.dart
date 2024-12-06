@@ -50,11 +50,18 @@ class LineupTabContentPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Goalkeepers Section
-                    const Text(
-                      'Goalkeepers',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      decoration: BoxDecoration(
+                        color:  const Color.fromARGB(255,0,88,159).withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: const Text(
+                        'Goalkeepers',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -62,22 +69,36 @@ class LineupTabContentPage extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     // Defenders Section
-                    const Text(
-                      'Defenders',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255,0,128,1).withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: const Text(
+                        'Defenders',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
                     _buildPlayerTable(defenders),
 
                     // Attackers Section
-                    const Text(
-                      'Attackers',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255,149,6,6).withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: const Text(
+                        'Attackers',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -94,7 +115,7 @@ class LineupTabContentPage extends StatelessWidget {
 
   Widget _buildPlayerTable(List<QueryDocumentSnapshot> players) {
     return DataTable(
-      columns: const [
+      columns:  const [
         DataColumn(label: Text('#')),
         DataColumn(label: Text('Name')),
         DataColumn(label: Text('Age')),
@@ -108,8 +129,8 @@ class LineupTabContentPage extends StatelessWidget {
           )),
           DataCell(Text(
             player['name'],
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            )),
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          )),
           DataCell(Text(player['age'].toString())),
           DataCell(Text(player['games'].toString())),
         ]);
