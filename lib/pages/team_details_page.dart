@@ -1,8 +1,8 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hockey_app/pages/matches_tab_content.dart';
 import 'package:hockey_app/pages/table_tab_content.dart';
 import 'package:hockey_app/addons/bottom_navigation_bar.dart';
+import 'package:hockey_app/pages/lineup_tab_content_page.dart';
 
 // vykreslení stránky s detaily týmu
 class TeamDetailsPage extends StatefulWidget {
@@ -24,18 +24,6 @@ class TeamDetailsPage extends StatefulWidget {
 
 class _TeamDetailsPageState extends State<TeamDetailsPage> {
   int _selectedIndex = 0;
-  final databaseReference = FirebaseDatabase.instance.ref('table');
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +138,8 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
                         ? MatchesTabContent(teamName: widget.teamName)
                         : _selectedIndex == 0
                             ? TableTabContent(teamName: widget.teamName)
-                            : const LineupTabContent(),
+                            : LineupTabContentPage(
+                                teamName: widget.teamName),
                   ),
                 ),
               ],
@@ -161,23 +150,11 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
       // Dolní navigační lišta
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
-    );
-  }
-}
-
-// třída pro zobrazení obsahu záložky s soupiskou
-class LineupTabContent extends StatelessWidget {
-  const LineupTabContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Text(
-        'This is the Lineup section.',
-        style: TextStyle(fontSize: 16),
+        onItemTapped: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }
