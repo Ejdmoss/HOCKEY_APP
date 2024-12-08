@@ -203,10 +203,7 @@ class MyDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(25),
             child: Divider(
-                color: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withOpacity(0.5)),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
           ),
           // titulky v bočním menu
           MyDrawerTitle(
@@ -281,7 +278,11 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           // vyvolaní funkce pro odhlášení uživatele
-          MyDrawerTitle(text: "Log Out", icon: Icons.logout, onTap: logout,),
+          MyDrawerTitle(
+            text: "Log Out",
+            icon: Icons.logout,
+            onTap: logout,
+          ),
           const SizedBox(height: 25),
         ],
       ),
