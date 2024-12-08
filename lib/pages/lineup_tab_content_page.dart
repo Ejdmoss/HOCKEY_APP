@@ -113,28 +113,36 @@ class LineupTabContentPage extends StatelessWidget {
     );
   }
 
+  List<DataColumn> _buildColumns() {
+    return const [
+      DataColumn(label: Text('#')),
+      DataColumn(label: Text('Name')),
+      DataColumn(label: Text('Age')),
+      DataColumn(label: Text('M')),
+    ];
+  }
+
+  List<DataRow> _buildRows(List<QueryDocumentSnapshot> players) {
+    return players.map((player) {
+      return DataRow(cells: [
+        DataCell(Text(
+          player['number'].toString(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          player['name'],
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(player['age'].toString())),
+        DataCell(Text(player['games'].toString())),
+      ]);
+    }).toList();
+  }
+
   Widget _buildPlayerTable(List<QueryDocumentSnapshot> players) {
     return DataTable(
-      columns:  const [
-        DataColumn(label: Text('#')),
-        DataColumn(label: Text('Name')),
-        DataColumn(label: Text('Age')),
-        DataColumn(label: Text('M')),
-      ],
-      rows: players.map((player) {
-        return DataRow(cells: [
-          DataCell(Text(
-            player['number'].toString(),
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          )),
-          DataCell(Text(
-            player['name'],
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          )),
-          DataCell(Text(player['age'].toString())),
-          DataCell(Text(player['games'].toString())),
-        ]);
-      }).toList(),
+      columns: _buildColumns(),
+      rows: _buildRows(players),
     );
   }
 }
