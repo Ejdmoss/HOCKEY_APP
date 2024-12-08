@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hockey_app/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // vykreslení stránky s nastaveními
 class SettingsPage extends StatefulWidget {
@@ -17,16 +18,17 @@ class _SettingsPageState extends State<SettingsPage> {
   String selectedTeamName = '';
   String nickname = '';
   bool isNicknameSubmitted = false;
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
 
   // Metoda pro uložení vybraného týmu do Firestore
   Future<void> saveSelectedTeamToDatabase(
       String teamName, String teamLogo) async {
-    final CollectionReference currentUserCollection =
-        FirebaseFirestore.instance.collection('currentUser');
+    final CollectionReference userCollection =
+        FirebaseFirestore.instance.collection('users');
 
     try {
       // Uložení vybraného týmu do Firestore
-      await currentUserCollection.doc('chosenTeam').set({
+      await userCollection.doc(userId).collection('chosenTeam').doc('team').set({
         'name': teamName,
         'logo': teamLogo,
       });
@@ -36,12 +38,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
   // metoda pro uložení přezdívky do databáze
   Future<void> saveNicknameToDatabase(String nickname) async {
-    final DocumentReference currentUserDoc =
-        FirebaseFirestore.instance.collection('currentUser').doc('data');
+    final DocumentReference userDoc =
+        FirebaseFirestore.instance.collection('users').doc(userId).collection('data').doc('nickname');
 
     try {
       // Uložení přezdívky do Firestore
-      await currentUserDoc.set({
+      await userDoc.set({
         'nickname': nickname,
       });
       // ignore: empty_catches

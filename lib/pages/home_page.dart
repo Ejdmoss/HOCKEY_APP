@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
       ),
       // vyvolání metody MyDrawer
-      drawer: const MyDrawer(),
+      drawer: MyDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

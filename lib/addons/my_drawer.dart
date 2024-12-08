@@ -7,10 +7,12 @@ import 'package:hockey_app/pages/table_page.dart';
 import 'package:hockey_app/pages/teams_page.dart';
 import 'package:hockey_app/sevices/auth/auth_service.dart';
 import 'package:hockey_app/pages/fill_data_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // vykreslení bočního menu
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key});
+  MyDrawer({super.key});
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
 // funkce pro odhlášení uživatele
   void logout() {
     final authService = AuthService();
@@ -28,8 +30,10 @@ class MyDrawer extends StatelessWidget {
           // zobrazení loga týmu a přezdívky uživatele
           StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
-                .collection('currentUser')
-                .doc('chosenTeam')
+                .collection('users')
+                .doc(userId)
+                .collection('chosenTeam')
+                .doc('team')
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -44,7 +48,7 @@ class MyDrawer extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: Image.asset(
-                          'lib/images/ehl2.png',
+                          'lib/images/ehl4.png',
                           width: 75,
                           height: 75,
                         ),
@@ -79,8 +83,10 @@ class MyDrawer extends StatelessWidget {
               // získání dat o uživateli
               return FutureBuilder<DocumentSnapshot>(
                 future: FirebaseFirestore.instance
-                    .collection('currentUser')
-                    .doc('data')
+                    .collection('users')
+                    .doc(userId)
+                    .collection('data')
+                    .doc('nickname')
                     .get(),
                 builder: (context, userSnapshot) {
                   // pokud se načítají data
