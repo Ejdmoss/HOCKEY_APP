@@ -35,7 +35,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       ],
       currentIndex: selectedIndex,
       // vybrana barva ikon a textu
-      selectedItemColor: const Color.fromARGB(255,0,88,159).withOpacity(0.3),
+      selectedItemColor: Theme.of(context).colorScheme.primary,
       unselectedItemColor: Theme.of(context).colorScheme.inversePrimary,
       onTap: onItemTapped,
     );

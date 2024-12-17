@@ -60,7 +60,7 @@ class MyDrawer extends StatelessWidget {
                             'No Team',
                             style: TextStyle(
                               color:
-                                  Theme.of(context).colorScheme.inversePrimary,
+                                  Theme.of(context).colorScheme.primary,
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
                             ),
@@ -69,7 +69,7 @@ class MyDrawer extends StatelessWidget {
                           Text(
                             'Please select a team',
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: Theme.of(context).colorScheme.primary,
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                             ),
@@ -185,7 +185,7 @@ class MyDrawer extends StatelessWidget {
                             Text(
                               teamName,
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary,
+                                color: Theme.of(context).colorScheme.primary,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),

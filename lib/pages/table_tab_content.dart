@@ -112,7 +112,7 @@ class TableTabContent extends StatelessWidget {
                 // Zvýraznění řádku, pokud je tým zvolený
                 decoration: BoxDecoration(
                   color: isCurrentTeam
-                      ? const Color.fromARGB(255,0,88,159).withOpacity(0.3)
+                      ? Theme.of(context).colorScheme.primary
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),

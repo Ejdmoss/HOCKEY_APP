@@ -17,9 +17,9 @@ final databaseReference = FirebaseDatabase.instance.ref('table');
 class _TablePageState extends State<TablePage> {
   Color getRowColor(int placement) {
     if (placement <= 4) {
-      return const Color.fromARGB(255, 21, 39, 77);
+      return Theme.of(context).colorScheme.primary;
     } else if (placement >= 5 && placement <= 12) {
-      return const Color.fromARGB(255, 18, 77, 107);
+      return Theme.of(context).colorScheme.outline;
     } else if (placement == 13) {
       return Theme.of(context).colorScheme.tertiary;
     } else if (placement == 14) {
@@ -152,7 +152,7 @@ class _TablePageState extends State<TablePage> {
           Divider(
             thickness: 1,
             height: 1,
-            color: Theme.of(context).colorScheme.secondary,
+            color: Theme.of(context).colorScheme.primary,
           ),
 
           // Tabulka

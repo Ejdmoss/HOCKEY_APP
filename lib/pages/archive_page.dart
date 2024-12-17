@@ -84,7 +84,7 @@ class ArchivePage extends StatelessWidget {
                                     flex: 1,
                                     child: Text(
                                       document['season'],
-                                      style: TextStyle(fontWeight: FontWeight.bold,color: const Color.fromARGB(255, 0, 88, 159).withOpacity(0.3)),
+                                      style: TextStyle(fontWeight: FontWeight.bold,color: Theme.of(context).colorScheme.primary),
                                     ),
                                   ),
                                   Expanded(

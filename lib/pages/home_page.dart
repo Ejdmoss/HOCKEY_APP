@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Icon(
                         Icons.arrow_drop_down,
-                        color: const Color.fromARGB(255,0,88,159).withOpacity(0.3),
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ],
                   ),
@@ -247,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                                           fontSize: 17,
                                           color: Theme.of(context)
                                               .colorScheme
-                                              .secondary,
+                                              .primary,
                                         ),
                                       ),
                                     ],
@@ -258,9 +258,8 @@ class _HomePageState extends State<HomePage> {
                                     style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                     )),
                                 const SizedBox(width: 2),
                                 Expanded(
@@ -276,7 +275,7 @@ class _HomePageState extends State<HomePage> {
                                           fontSize: 17,
                                           color: Theme.of(context)
                                               .colorScheme
-                                              .secondary,
+                                              .primary,
                                         ),
                                       ),
                                       const SizedBox(width: 5),

@@ -34,7 +34,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
           Container(
             height: 250,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 0, 88, 159).withOpacity(0.3),
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           // Obsah stránky
