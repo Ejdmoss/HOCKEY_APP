@@ -36,6 +36,28 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void forgotPassword() async {
+    final authService = AuthService();
+    try {
+      await authService.sendPasswordResetEmail(emailController.text);
+      showDialog(
+        // ignore: use_build_context_synchronously
+        context: context,
+        builder: (context) => const AlertDialog(
+          title: Text("Password reset email sent!"),
+        ),
+      );
+    } catch (e) {
+      showDialog(
+        // ignore: use_build_context_synchronously
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(e.toString()),
+        ),
+      );
+    }
+  }
+
   // metoda build, která vrací Scaffold s AppBar a tělem obsahujícím Stack s obrázkem a sloupcem s textovými poli a tlačítkem
   @override
   Widget build(BuildContext context) {
@@ -44,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           // přidání obrázku s průhledností
           Opacity(
-            opacity: 0.2,
+            opacity: 1,
             child: Image.asset(
               'lib/images/ehl3.jpg',
               fit: BoxFit.cover,
@@ -72,6 +94,18 @@ class _LoginPageState extends State<LoginPage> {
                     controller: passwordController,
                     hintText: "Password",
                     obscureText: true,
+                  ),
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: forgotPassword,
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 25),
                   // přidání tlačítka s textem "Sign In" a funkcí login

@@ -311,15 +311,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        // vytvoření oddělovače
-                        Divider(
-                          thickness: 1,
-                          height: 1,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .inversePrimary
-                              .withOpacity(0.1),
-                        ),
                       ],
                     );
                   }).toList(),
@@ -329,7 +320,7 @@ class _HomePageState extends State<HomePage> {
           ),
           // vytvoření obrázku
           Padding(
-            padding: const EdgeInsets.only(bottom: 35, left: 15, right: 15),
+            padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
             child: Container(
               height: 215,
               decoration: BoxDecoration(

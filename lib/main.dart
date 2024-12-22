@@ -4,10 +4,10 @@ import 'package:hockey_app/pages/landing_page.dart';
 import 'package:hockey_app/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),

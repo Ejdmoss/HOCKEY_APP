@@ -158,7 +158,7 @@ class _TablePageState extends State<TablePage> {
           // Tabulka
           Expanded(
             child: FirebaseAnimatedList(
-              query: databaseReference,
+              query: databaseReference.orderByChild('placement'),
               itemBuilder: (context, snapshot, animation, index) {
                 int placement = snapshot.child("placement").value as int;
                 return Column(

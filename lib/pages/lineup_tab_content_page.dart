@@ -1,38 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+// Importování balíčku pro práci s Firebase.
 class LineupTabContentPage extends StatelessWidget {
   final String teamName;
-
+// Třída pro zobrazení sestavy týmu.
   const LineupTabContentPage({super.key, required this.teamName});
-
+// Metoda pro vytvoření widgetu.
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('teams')
-          .where('name', isEqualTo: teamName) // Query by team name
+          .where('name', isEqualTo: teamName) // získejte dokument týmu
           .snapshots(),
       builder: (context, snapshot) {
+        // Zobrazení načítání, pokud je stream ve stavu čekání.
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
+        // Zobrazení, pokud nejsou k dispozici žádné data.
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(child: Text('No lineup available.'));
         }
-        final teamDoc = snapshot.data!.docs.first; // Get the team document
+        // Získání dokumentu týmu.
+        final teamDoc = snapshot.data!.docs.first; // získejte dokument týmu
         final lineupCollection = teamDoc.reference.collection('lineup');
         return StreamBuilder<QuerySnapshot>(
           stream: lineupCollection.snapshots(),
           builder: (context, lineupSnapshot) {
+            // Zobrazení načítání, pokud je stream ve stavu čekání.
             if (lineupSnapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
+            // Zobrazení, pokud nejsou k dispozici žádné data.
             if (!lineupSnapshot.hasData || lineupSnapshot.data!.docs.isEmpty) {
               return const Center(child: Text('No lineup available.'));
             }
 
-            // Separate players by position
+            // Rozdělení hráčů podle pozice
             final goalkeepers = lineupSnapshot.data!.docs
                 .where((doc) => doc['position'] == 'goalkeeper')
                 .toList();
@@ -49,60 +54,19 @@ class LineupTabContentPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Goalkeepers Section
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                      decoration: BoxDecoration(
-                        color:  const Color.fromARGB(255,0,88,159).withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: const Text(
-                        'Goalkeepers',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    _buildSectionHeader('Goalkeepers', const Color.fromARGB(255, 0, 88, 159)),
                     const SizedBox(height: 10),
-                    _buildPlayerTable(goalkeepers),
+                    _buildPlayerCards(goalkeepers),
                     const SizedBox(height: 20),
 
-                    // Defenders Section
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255,0,128,1).withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: const Text(
-                        'Defenders',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    _buildSectionHeader('Defenders', const Color.fromARGB(255, 0, 128, 1)),
                     const SizedBox(height: 10),
-                    _buildPlayerTable(defenders),
+                    _buildPlayerCards(defenders),
+                    const SizedBox(height: 20),
 
-                    // Attackers Section
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255,149,6,6).withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: const Text(
-                        'Attackers',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    _buildSectionHeader('Attackers', const Color.fromARGB(255, 149, 6, 6)),
                     const SizedBox(height: 10),
-                    _buildPlayerTable(attackers),
+                    _buildPlayerCards(attackers),
                   ],
                 ),
               ),
@@ -113,36 +77,43 @@ class LineupTabContentPage extends StatelessWidget {
     );
   }
 
-  List<DataColumn> _buildColumns() {
-    return const [
-      DataColumn(label: Text('#')),
-      DataColumn(label: Text('Name')),
-      DataColumn(label: Text('Age')),
-      DataColumn(label: Text('M')),
-    ];
+  Widget _buildSectionHeader(String title, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 
-  List<DataRow> _buildRows(List<QueryDocumentSnapshot> players) {
-    return players.map((player) {
-      return DataRow(cells: [
-        DataCell(Text(
-          player['number'].toString(),
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        )),
-        DataCell(Text(
-          player['name'],
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        )),
-        DataCell(Text(player['age'].toString())),
-        DataCell(Text(player['games'].toString())),
-      ]);
-    }).toList();
-  }
-
-  Widget _buildPlayerTable(List<QueryDocumentSnapshot> players) {
-    return DataTable(
-      columns: _buildColumns(),
-      rows: _buildRows(players),
+  Widget _buildPlayerCards(List<QueryDocumentSnapshot> players) {
+    return Column(
+      children: players.map((player) {
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          child: ListTile(
+            leading: CircleAvatar(
+              child: Text(
+                player['number'].toString(),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            title: Text(
+              player['name'],
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            subtitle: Text('Age: ${player['age']} | Games: ${player['games']}'),
+          ),
+        );
+      }).toList(),
     );
   }
 }

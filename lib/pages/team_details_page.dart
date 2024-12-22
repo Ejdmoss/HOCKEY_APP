@@ -34,7 +34,14 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
           Container(
             height: 250,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+              image: DecorationImage(
+                image: AssetImage(
+                  Theme.of(context).brightness == Brightness.light
+                      ? 'lib/images/orange.jpg'
+                      : 'lib/images/blue.jpg',
+                ),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           // Obsah stránky
@@ -138,8 +145,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
                         ? MatchesTabContent(teamName: widget.teamName)
                         : _selectedIndex == 0
                             ? TableTabContent(teamName: widget.teamName)
-                            : LineupTabContentPage(
-                                teamName: widget.teamName),
+                            : LineupTabContentPage(teamName: widget.teamName),
                   ),
                 ),
               ],

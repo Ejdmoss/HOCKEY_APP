@@ -38,4 +38,13 @@ class AuthService {
   Future<void> signOut() async {
     return await _firebaseAuth.signOut();
   }
+
+  // Odeslat email pro reset hesla
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException {
+      throw Exception("Failed to send password reset email enter an email");
+    }
+  }
 }

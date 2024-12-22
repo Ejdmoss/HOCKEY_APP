@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'team_details_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // vykreslení stránky s týmy
 class TeamsPage extends StatefulWidget {
@@ -13,6 +14,32 @@ class TeamsPage extends StatefulWidget {
 // stavový objekt pro stránku s týmy
 class _TeamsPageState extends State<TeamsPage> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final User? user = FirebaseAuth.instance.currentUser;
+  // metoda pro přidání/odebrání týmu z oblíbených
+  Future<void> _toggleFavorite(String teamName, bool isFavorite) async {
+    if (user != null) {
+      DocumentReference userDoc = firestore.collection('users').doc(user!.uid);
+      if (isFavorite) {
+        await userDoc.set({
+          'favouriteTeams': FieldValue.arrayRemove([teamName])
+        }, SetOptions(merge: true));
+      } else {
+        await userDoc.set({
+          'favouriteTeams': FieldValue.arrayUnion([teamName])
+        }, SetOptions(merge: true));
+      }
+    }
+  }
+  // metoda pro zjištění, zda je tým v oblíbených
+  Future<bool> _isFavorite(String teamName) async {
+    if (user != null) {
+      DocumentSnapshot userDoc = await firestore.collection('users').doc(user!.uid).get();
+      List<dynamic> favoriteTeams = userDoc.get('favouriteTeams') ?? [];
+      return favoriteTeams.contains(teamName);
+    }
+    return false;
+  }
+
 // vykreslení stránky s týmy
   @override
   Widget build(BuildContext context) {
@@ -46,49 +73,67 @@ class _TeamsPageState extends State<TeamsPage> {
                 String teamLogo = doc['logo'];
                 String teamStadium = doc['stadion'];
                 // zobrazení jednotlivých týmů
-                return Column(
-                  children: [
-                    Card(
-                      elevation: 8,
-                      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        leading: Image.network(
-                          teamLogo,
-                          width: 40,
-                          height: 40,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.error, size: 30);
-                          },
-                        ),
-                        title: Text(
-                          teamName,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                        ),
-                        onTap: () {
-                          // Navigace na stránku s detaily týmu
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TeamDetailsPage(
-                                teamName: teamName,
-                                teamLogo: teamLogo,
-                                teamStadium: teamStadium,
-                              ),
+                return FutureBuilder<bool>(
+                  future: _isFavorite(teamName),
+                  builder: (context, favSnapshot) {
+                    if (!favSnapshot.hasData) {
+                      return const SizedBox.shrink();
+                    }
+                    bool isFavorite = favSnapshot.data!;
+                    return Column(
+                      children: [
+                        // zobrazení jednoho týmu
+                        Card(
+                          elevation: 8,
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            leading: Image.network(
+                              teamLogo,
+                              width: 40,
+                              height: 40,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error, size: 30);
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    Divider(
-                      thickness: 1,
-                      height: 1,
-                      color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-                    ),
-                  ],
+                            title: Text(
+                              teamName,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(
+                                isFavorite ? Icons.star : Icons.star_border,
+                                color: isFavorite ? Colors.yellow : null,
+                              ),
+                              onPressed: () {
+                                _toggleFavorite(teamName, isFavorite);
+                                setState(() {});
+                              },
+                            ),
+                            onTap: () {
+                              // Navigace na stránku s detaily týmu
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TeamDetailsPage(
+                                    teamName: teamName,
+                                    teamLogo: teamLogo,
+                                    teamStadium: teamStadium,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 );
               },
             ),

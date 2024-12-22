@@ -59,8 +59,7 @@ class MyDrawer extends StatelessWidget {
                           Text(
                             'No Team',
                             style: TextStyle(
-                              color:
-                                  Theme.of(context).colorScheme.primary,
+                              color: Theme.of(context).colorScheme.primary,
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
                             ),

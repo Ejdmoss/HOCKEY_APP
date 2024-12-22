@@ -72,19 +72,25 @@ class ArchivePage extends StatelessWidget {
                         children: [
                           Card(
                             elevation: 8,
-                            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
                               title: Row(
                                 children: [
                                   Expanded(
                                     flex: 1,
                                     child: Text(
                                       document['season'],
-                                      style: TextStyle(fontWeight: FontWeight.bold,color: Theme.of(context).colorScheme.primary),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
                                     ),
                                   ),
                                   Expanded(
@@ -93,13 +99,14 @@ class ArchivePage extends StatelessWidget {
                                       children: [
                                         Image.network(
                                           document['logo'],
-                                          height: 30,
-                                          width: 30,
+                                          height: 40,
+                                          width: 40,
                                         ),
                                         const SizedBox(width: 10),
                                         Text(
                                           document['winner'],
-                                          style: const TextStyle(fontWeight: FontWeight.bold),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ],
                                     ),

@@ -47,6 +47,26 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  void forgotPassword() async {
+    final authService = AuthService();
+    try {
+      await authService.sendPasswordResetEmail(emailController.text);
+      showDialog(
+        context: context,
+        builder: (context) => const AlertDialog(
+          title: Text("Password reset email sent!"),
+        ),
+      );
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(e.toString()),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
         children: [
           // Pozadí stránky
           Opacity(
-            opacity: 0.2,
+            opacity: 1,
             child: Image.asset(
               'lib/images/ehl3.jpg',
               width: double.infinity,
@@ -88,6 +108,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: confirmPasswordController,
                       hintText: "Confirm password",
                       obscureText: true),
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: forgotPassword,
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 25),
                   // Tlačítko pro zaregistrování.
                   MyButton(text: "Sign Up", onTap: register),

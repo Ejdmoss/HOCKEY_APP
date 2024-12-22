@@ -20,6 +20,50 @@ class _SettingsPageState extends State<SettingsPage> {
   bool isNicknameSubmitted = false;
   final String userId = FirebaseAuth.instance.currentUser!.uid;
 
+  // Metoda pro zobrazení pop-up zprávy
+  void showPopupMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text(
+            'Notification',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            textAlign: TextAlign.center, // Center the title text
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+              fontSize: 18,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            textAlign: TextAlign.center, // Center the content text
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // Metoda pro uložení vybraného týmu do Firestore
   Future<void> saveSelectedTeamToDatabase(
       String teamName, String teamLogo) async {
@@ -28,24 +72,33 @@ class _SettingsPageState extends State<SettingsPage> {
 
     try {
       // Uložení vybraného týmu do Firestore
-      await userCollection.doc(userId).collection('chosenTeam').doc('team').set({
+      await userCollection
+          .doc(userId)
+          .collection('chosenTeam')
+          .doc('team')
+          .set({
         'name': teamName,
         'logo': teamLogo,
       });
+      showPopupMessage('You chose: $teamName');
       // ignore: empty_catches
     } catch (e) {}
   }
 
   // metoda pro uložení přezdívky do databáze
   Future<void> saveNicknameToDatabase(String nickname) async {
-    final DocumentReference userDoc =
-        FirebaseFirestore.instance.collection('users').doc(userId).collection('data').doc('nickname');
+    final DocumentReference userDoc = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('data')
+        .doc('nickname');
 
     try {
       // Uložení přezdívky do Firestore
       await userDoc.set({
         'nickname': nickname,
       });
+      showPopupMessage('Nickname submitted!');
       // ignore: empty_catches
     } catch (e) {}
   }
@@ -67,7 +120,14 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+              image: DecorationImage(
+                image: AssetImage(
+                  Theme.of(context).brightness == Brightness.light
+                      ? 'lib/images/orange.jpg'
+                      : 'lib/images/blue.jpg',
+                ),
+                fit: BoxFit.cover,
+              ),
               borderRadius: BorderRadius.circular(12),
             ),
             margin: const EdgeInsets.only(left: 25, top: 10, right: 25),
@@ -80,6 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   "Dark Mode",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    fontSize: 16,
                     color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
@@ -98,20 +159,27 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.all(25),
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                image: DecorationImage(
+                  image: AssetImage(
+                    Theme.of(context).brightness == Brightness.light
+                        ? 'lib/images/orange.jpg'
+                        : 'lib/images/blue.jpg',
+                  ),
+                  fit: BoxFit.cover,
+                ),
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: const EdgeInsets.all(25),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Pole pro zadání přezdívky
-                  Expanded(
+                  Flexible(
                     child: TextField(
                       decoration: const InputDecoration(
                         hintText: 'Enter your nickname', // Default text
                         border: InputBorder.none, // Remove border
                       ),
+                      style: const TextStyle(fontWeight: FontWeight.bold), // Make text bold
                       onChanged: (value) {
                         setState(() {
                           nickname = value;
@@ -133,21 +201,53 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: const Text('Submit'),
                   ),
                 ],
+                
               ),
             ),
           ),
           // Zobrazení potvrzení o odeslání přezdívky
-          if (isNicknameSubmitted)
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                'Nickname submitted!',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 25, right: 25, left: 25),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                    Theme.of(context).brightness == Brightness.light
+                        ? 'lib/images/orange.jpg'
+                        : 'lib/images/blue.jpg',
+                  ),
+                  fit: BoxFit.cover,
                 ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.all(25),
+              child: Row(
+                children: [
+                  // Text pro zapomenuté heslo
+                  const Text(
+                    'Forgotten password?',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16
+                    ),
+                  ),
+                  const SizedBox(width: 62),
+                  ElevatedButton(
+                    onPressed: () async {
+                      String email = FirebaseAuth.instance.currentUser!.email!;
+                      try {
+                        await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                        showPopupMessage('Password reset email sent to $email!');
+                      } catch (e) {
+                        showPopupMessage('Error: Unable to send reset email.');
+                      }
+                    },
+                    child: const Text('Submit'),
+                  ),
+                ],
               ),
             ),
+          ),
           // Text pro výběr oblíbeného týmu
           Padding(
             padding: const EdgeInsets.only(top: 25, bottom: 20),
@@ -161,78 +261,67 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           // Výběr oblíbeného týmu
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('teams').snapshots(),
-            builder: (context, snapshot) {
-              // Zobrazení načítání
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return const Center(child: Text('No teams available.'));
-              }
-              // Výběr týmu
-              return Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                alignment: WrapAlignment.center,
-                children: snapshot.data!.docs.map((doc) {
-                  String teamName = doc['name'];
-                  String teamLogo = doc['logo'];
+          Flexible(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('teams').snapshots(),
+              builder: (context, snapshot) {
+                // Zobrazení načítání
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text('No teams available.'));
+                }
+                // Výběr týmu
+                return Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.center,
+                  children: snapshot.data!.docs.map((doc) {
+                    String teamName = doc['name'];
+                    String teamLogo = doc['logo'];
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedTeamName = teamName;
-                      });
-                      // Uložení vybraného týmu do Firestore
-                      saveSelectedTeamToDatabase(teamName, teamLogo);
-                    },
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 45,
-                          height: 45,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 4,
-                                offset: const Offset(0, 4),
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedTeamName = teamName;
+                        });
+                        // Uložení vybraného týmu do Firestore
+                        saveSelectedTeamToDatabase(teamName, teamLogo);
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 45,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: ClipOval(
+                              child: Image.network(
+                                teamLogo,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.error, size: 30);
+                                },
                               ),
-                            ],
-                          ),
-                          child: ClipOval(
-                            child: Image.network(
-                              teamLogo,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(Icons.error, size: 30);
-                              },
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-              );
-            },
-          ),
-          // Zobrazení vybraného týmu
-          if (selectedTeamName.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Text(
-                'Selected Team: $selectedTeamName',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-              ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
             ),
+          ),
         ],
       ),
     );
