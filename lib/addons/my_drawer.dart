@@ -19,6 +19,73 @@ class MyDrawer extends StatelessWidget {
     authService.signOut();
   }
 
+  // funkce pro zobrazení pop-up zprávy
+  void showPopupMessage(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text(
+            'Notification',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+              fontSize: 18,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // funkce pro kontrolu role uživatele
+  Future<void> checkUserRole(BuildContext context) async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('data')
+        .doc('roles')
+        .get();
+    String role = userDoc['role'];
+    if (role == 'admin') {
+      Navigator.push(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(
+          builder: (context) => const FillDataPage(),
+        ),
+      );
+    } else {
+      // ignore: use_build_context_synchronously
+      showPopupMessage(context, 'Only admins are allowed to access this page');
+    }
+  }
+
 // vytvoření bočního menu
   @override
   Widget build(BuildContext context) {
@@ -268,12 +335,7 @@ class MyDrawer extends StatelessWidget {
             icon: Icons.edit,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const FillDataPage(),
-                ),
-              );
+              checkUserRole(context);
             },
           ),
           // vyvolaní funkce pro odhlášení uživatele

@@ -30,9 +30,16 @@ class MatchesTabContent extends StatelessWidget {
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(child: Text('No matches available.'));
         }
+        // Seřazení dokumentů podle data
+        List<QueryDocumentSnapshot> sortedDocs = snapshot.data!.docs;
+        sortedDocs.sort((a, b) {
+          DateTime dateA = DateTime.parse(a['date']);
+          DateTime dateB = DateTime.parse(b['date']);
+          return dateB.compareTo(dateA); // sestupně
+        });
         // vykreslení seznamu zápasů
         return ListView(
-          children: snapshot.data!.docs.map((doc) {
+          children: sortedDocs.map((doc) {
             String date = doc['date'];
             String formattedDate =
                 DateFormat('dd.MM.yyyy').format(DateTime.parse(date));

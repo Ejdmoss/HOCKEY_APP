@@ -32,6 +32,9 @@ class _HomePageState extends State<HomePage> {
     'November',
     'December'
   ];
+  final DateTime seasonStart = DateTime(DateTime.now().year, 9, 17);
+  final DateTime seasonEnd = DateTime(DateTime.now().year + 1, 3, 4);
+
   // vytvoření metody getGamesForDate
   Stream<QuerySnapshot> getGamesForDate(DateTime date) {
     String formattedDate = DateFormat('yyyy-MM-dd').format(date);
@@ -45,7 +48,8 @@ class _HomePageState extends State<HomePage> {
   void updateMonth(int index) {
     setState(() {
       selectedMonthIndex = index;
-      selectedDate = DateTime(selectedDate.year, index + 1, 1);
+      int year = (index >= 8) ? 2024 : 2025; //na základě vybraného měsíce se určí rok
+      selectedDate = DateTime(year, index + 1, 1);
     });
   }
 
@@ -88,11 +92,14 @@ class _HomePageState extends State<HomePage> {
                       position:
                           const RelativeRect.fromLTRB(100.0, 100.0, 0.0, 0.0),
                       items: List.generate(monthNames.length, (index) {
-                        return PopupMenuItem<int>(
-                          value: index,
-                          child: Text(monthNames[index]),
-                        );
-                      }),
+                        if (index >= 8 || index <= 2) { //zobrazení měsíců od září do března
+                          return PopupMenuItem<int>(
+                            value: index,
+                            child: Text(monthNames[index]),
+                          );
+                        }
+                        return null;
+                      }).whereType<PopupMenuItem<int>>().toList(),
                     ).then((value) {
                       if (value != null) {
                         updateMonth(value);
@@ -129,6 +136,14 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(5, (index) {
                   DateTime date = selectedDate.add(Duration(days: index - 2));
+
+                  // omezení zobrazení dat na období od 17. září do 4. března
+                  if (date.isBefore(seasonStart)) {
+                    date = seasonStart;
+                  } else if (date.isAfter(seasonEnd)) {
+                    date = seasonEnd;
+                  }
+
                   return GestureDetector(
                     onTap: () {
                       setState(() {
@@ -168,6 +183,16 @@ class _HomePageState extends State<HomePage> {
                                       .inversePrimary,
                             ),
                           ),
+                          if (date.month == 9 && date.day == 17)
+                            Text(
+                              "START OF THE SEASON",
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                         ],
                       ),
                     ),
