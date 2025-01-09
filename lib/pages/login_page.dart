@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: (context) => AlertDialog(
           title: Text(e.toString()),
-        ),
+        )
       );
     }
   }
@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
           Opacity(
             opacity: 1,
             child: Image.asset(
-              'lib/images/ehl3.jpg',
+              'lib/images/pozadi.jpg',
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,

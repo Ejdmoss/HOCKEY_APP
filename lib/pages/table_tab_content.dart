@@ -102,7 +102,7 @@ class TableTabContent extends StatelessWidget {
         // Seznam týmů
         Expanded(
           child: FirebaseAnimatedList(
-            query: FirebaseDatabase.instance.ref('table'),
+            query: FirebaseDatabase.instance.ref('table').orderByChild('placement'),
             itemBuilder: (context, snapshot, animation, index) {
               int placement = snapshot.child("placement").value as int;
               String teamName = snapshot.child("name").value.toString();

@@ -47,26 +47,6 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void forgotPassword() async {
-    final authService = AuthService();
-    try {
-      await authService.sendPasswordResetEmail(emailController.text);
-      showDialog(
-        context: context,
-        builder: (context) => const AlertDialog(
-          title: Text("Password reset email sent!"),
-        ),
-      );
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(e.toString()),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Opacity(
             opacity: 1,
             child: Image.asset(
-              'lib/images/ehl3.jpg',
+              'lib/images/pozadi.jpg',
               width: double.infinity,
               height: double.infinity,
               fit: BoxFit.cover,
@@ -108,18 +88,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: confirmPasswordController,
                       hintText: "Confirm password",
                       obscureText: true),
-                  const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: forgotPassword,
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 25),
                   // Tlačítko pro zaregistrování.
                   MyButton(text: "Sign Up", onTap: register),
@@ -128,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "already have an account?",
+                        "Already have an account?",
                         style: TextStyle(
                             color:
                                 Theme.of(context).colorScheme.inversePrimary),

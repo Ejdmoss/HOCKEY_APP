@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:hockey_app/pages/game_details_page.dart';
 
 // vykreslení obsahu záložky zápasů
 class MatchesTabContent extends StatelessWidget {
@@ -48,76 +49,87 @@ class MatchesTabContent extends StatelessWidget {
             String team2Logo = doc['team2logo'];
             int team2Score = int.parse(doc['team2score'].toString());
             // vykreslení jednoho zápasu
-            return Column(
-              children: [
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GameDetailsPage(matchId: doc.id),
                   ),
-                  child: Column(
-                    children: [
-                      // logo týmů a skóre
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.network(
-                            team1Logo,
-                            width: 50,
-                            height: 50,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error, size: 50);
-                            },
-                          ),
-                          const SizedBox(width: 20),
-                          Text(
-                            '$team1Score - $team2Score',
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Image.network(
-                            team2Logo,
-                            width: 50,
-                            height: 50,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error, size: 50);
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        formattedDate,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(context).colorScheme.inversePrimary,
+                );
+              },
+              child: Column(
+                children: [
+                  Container(
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        // logo týmů a skóre
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.network(
+                              team1Logo,
+                              width: 50,
+                              height: 50,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error, size: 50);
+                              },
+                            ),
+                            const SizedBox(width: 20),
+                            Text(
+                              '$team1Score - $team2Score',
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Image.network(
+                              team2Logo,
+                              width: 50,
+                              height: 50,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error, size: 50);
+                              },
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          formattedDate,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                            fontWeight: FontWeight.w500
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Divider(
-                  thickness: 1,
-                  height: 1,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .inversePrimary
-                      .withOpacity(0.1),
-                ),
-              ],
+                  Divider(
+                    thickness: 1,
+                    height: 1,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.1),
+                  ),
+                ],
+              ),
             );
           }).toList(),
         );

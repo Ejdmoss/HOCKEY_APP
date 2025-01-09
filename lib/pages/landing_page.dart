@@ -8,13 +8,17 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color.fromRGBO(204, 204, 204, 1),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/images/plocha.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.asset('lib/images/logo.png'),
-              const SizedBox(height: 20),
+              const SizedBox(height: 550),
               const Text(
                 'Welcome to Hockey App',
                 style: TextStyle(

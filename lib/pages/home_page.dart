@@ -32,8 +32,8 @@ class _HomePageState extends State<HomePage> {
     'November',
     'December'
   ];
-  final DateTime seasonStart = DateTime(DateTime.now().year, 9, 17);
-  final DateTime seasonEnd = DateTime(DateTime.now().year + 1, 3, 4);
+  final DateTime seasonStart = DateTime(2024, 9, 17);
+  final DateTime seasonEnd = DateTime(2025, 3, 4);
 
   // vytvoření metody getGamesForDate
   Stream<QuerySnapshot> getGamesForDate(DateTime date) {
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
   void updateMonth(int index) {
     setState(() {
       selectedMonthIndex = index;
-      int year = (index >= 8) ? 2024 : 2025; //na základě vybraného měsíce se určí rok
+      int year = (index >= 8) ? 2025 : 2026; //na základě vybraného měsíce se určí rok
       selectedDate = DateTime(year, index + 1, 1);
     });
   }

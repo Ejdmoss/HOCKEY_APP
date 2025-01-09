@@ -124,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 image: AssetImage(
                   Theme.of(context).brightness == Brightness.light
                       ? 'lib/images/orange.jpg'
-                      : 'lib/images/blue.jpg',
+                      : 'lib/images/gradient.jpeg',
                 ),
                 fit: BoxFit.cover,
               ),
@@ -163,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   image: AssetImage(
                     Theme.of(context).brightness == Brightness.light
                         ? 'lib/images/orange.jpg'
-                        : 'lib/images/blue.jpg',
+                        : 'lib/images/gradient.jpeg',
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -214,7 +214,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   image: AssetImage(
                     Theme.of(context).brightness == Brightness.light
                         ? 'lib/images/orange.jpg'
-                        : 'lib/images/blue.jpg',
+                        : 'lib/images/gradient.jpeg',
                   ),
                   fit: BoxFit.cover,
                 ),
