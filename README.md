@@ -32,5 +32,6 @@ Tento projekt bude postaven pomocí moderních technologií:
 - https://chatgpt.com/ - chatGPT jako pomoc k nejruznějším věcem
 - https://www.youtube.com/watch?v=uYgbwOrW-p4 - tutoriál na live database v Firebase
 
+# Závěr
 
-- vytvoření flutter projektu, upravení front end pomoci flutter, připojení firebase s flutterem, musel jsem stahnout nodeJS pro zprovozneni npm comandu. Musí bý verze sdk 17 a vyšší takže stáhnout i toto, nastavit sdk path a uložit, dále flutter login a flutter pub global activate flutterfire_cli, flutterfire configure nadsledne pro zvoleni applikace, nasledne flutter pub add firebase_core, jako posledni flutter pub add firebase_auth
+Tato aplikace přináší uživatelům snadný a přehledný způsob, jak sledovat vše důležité o jejich oblíbených hokejových týmech hrajících v české Tipsport extralize. Využitím moderních technologií, jako je Flutter a Firebase, zajišťuje spolehlivost, rychlost a multiplatformní dostupnost. Do budoucna plánuju přidání dalších funkcí, jako jsou notifikace, detailnější statistiky hráčů nebo živé aktualizace výsledků. Cílem bylo vytvořit nástroj, který uspokojí potřeby každého hokejového fanouška.
