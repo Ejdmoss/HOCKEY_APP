@@ -29,13 +29,13 @@ class _SettingsPageState extends State<SettingsPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          title: Text(
+          title: const Text(
             'Notification',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary,
+              color: Color.fromRGBO(13, 101, 172, 1),
             ),
-            textAlign: TextAlign.center, // Center the title text
+            textAlign: TextAlign.center,
           ),
           content: Text(
             message,
@@ -43,7 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
               fontSize: 18,
               color: Theme.of(context).colorScheme.onSurface,
             ),
-            textAlign: TextAlign.center, // Center the content text
+            textAlign: TextAlign.center,
           ),
           actions: <Widget>[
             TextButton(
@@ -64,27 +64,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  // Metoda pro uložení vybraného týmu do Firestore
-  Future<void> saveSelectedTeamToDatabase(
-      String teamName, String teamLogo) async {
-    final CollectionReference userCollection =
-        FirebaseFirestore.instance.collection('users');
-
-    try {
-      // Uložení vybraného týmu do Firestore
-      await userCollection
-          .doc(userId)
-          .collection('chosenTeam')
-          .doc('team')
-          .set({
-        'name': teamName,
-        'logo': teamLogo,
-      });
-      showPopupMessage('You chose: $teamName');
-      // ignore: empty_catches
-    } catch (e) {}
-  }
-
   // metoda pro uložení přezdívky do databáze
   Future<void> saveNicknameToDatabase(String nickname) async {
     final DocumentReference userDoc = FirebaseFirestore.instance
@@ -99,6 +78,35 @@ class _SettingsPageState extends State<SettingsPage> {
         'nickname': nickname,
       });
       showPopupMessage('Nickname submitted!');
+      setState(() {});
+      // ignore: empty_catches
+    } catch (e) {}
+  }
+
+  // Metoda pro uložení vybraného týmu do Firestore
+  Future<void> saveSelectedTeamToDatabase(
+      String teamName, String teamLogo) async {
+    final CollectionReference userCollection =
+        FirebaseFirestore.instance.collection('users');
+
+    try {
+      final DocumentReference nicknameDoc =
+          userCollection.doc(userId).collection('data').doc('nickname');
+      DocumentSnapshot nicknameSnapshot = await nicknameDoc.get();
+      if (!nicknameSnapshot.exists) {
+        await nicknameDoc.set({'nickname': 'No nickname set'});
+      }
+
+      // Uložení vybraného týmu do Firestore
+      await userCollection
+          .doc(userId)
+          .collection('chosenTeam')
+          .doc('team')
+          .set({
+        'name': teamName,
+        'logo': teamLogo,
+      });
+      showPopupMessage('You chose: $teamName');
       // ignore: empty_catches
     } catch (e) {}
   }
@@ -118,12 +126,13 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Column(
         children: [
+          // Pole pro výběr režimu
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
                   Theme.of(context).brightness == Brightness.light
-                      ? 'lib/images/orange.jpg'
+                      ? 'lib/images/gradient.jpeg'
                       : 'lib/images/gradient.jpeg',
                 ),
                 fit: BoxFit.cover,
@@ -136,12 +145,12 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Text pro výběr režimu
-                Text(
+                const Text(
                   "Dark Mode",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Theme.of(context).colorScheme.inversePrimary,
+                    color: Colors.white,
                   ),
                 ),
                 CupertinoSwitch(
@@ -162,7 +171,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 image: DecorationImage(
                   image: AssetImage(
                     Theme.of(context).brightness == Brightness.light
-                        ? 'lib/images/orange.jpg'
+                        ? 'lib/images/gradient.jpeg'
                         : 'lib/images/gradient.jpeg',
                   ),
                   fit: BoxFit.cover,
@@ -176,14 +185,20 @@ class _SettingsPageState extends State<SettingsPage> {
                   Flexible(
                     child: TextField(
                       decoration: const InputDecoration(
-                        hintText: 'Enter your nickname', // Default text
-                        border: InputBorder.none, // Remove border
+                        hintText: 'Enter your nickname',
+                        hintStyle: TextStyle(
+                            color:
+                                Colors.white),
+                        border: InputBorder.none,
                       ),
-                      style: const TextStyle(fontWeight: FontWeight.bold), // Make text bold
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ), 
                       onChanged: (value) {
                         setState(() {
                           nickname = value;
-                          isNicknameSubmitted = false; // Reset on change
+                          isNicknameSubmitted = false;
                         });
                       },
                     ),
@@ -191,17 +206,24 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () {
-                      if (nickname.isNotEmpty) {
+                      // Podmínka pro uložení přezdívky do databáze
+                      if (nickname.isNotEmpty && nickname.length <= 20) {
                         saveNicknameToDatabase(nickname);
                         setState(() {
                           isNicknameSubmitted = true;
                         });
+                        // podmínka pro zobrazení chybové hlášky
+                      } else if (nickname.length > 15) {
+                        showPopupMessage(
+                            'Nickname cannot be more than 15 characters.');
                       }
                     },
-                    child: const Text('Submit'),
+                    child: const Text(
+                      'Submit',
+                      style: TextStyle(color: Color.fromRGBO(13, 101, 172, 1)),
+                    ),
                   ),
                 ],
-                
               ),
             ),
           ),
@@ -213,7 +235,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 image: DecorationImage(
                   image: AssetImage(
                     Theme.of(context).brightness == Brightness.light
-                        ? 'lib/images/orange.jpg'
+                        ? 'lib/images/gradient.jpeg'
                         : 'lib/images/gradient.jpeg',
                   ),
                   fit: BoxFit.cover,
@@ -224,25 +246,33 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Row(
                 children: [
                   // Text pro zapomenuté heslo
-                  const Text(
-                    'Forgotten password?',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16
+                  const Expanded(
+                    child: Text(
+                      'Forgotten password?',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 62),
                   ElevatedButton(
                     onPressed: () async {
                       String email = FirebaseAuth.instance.currentUser!.email!;
+                      // Odeslání emailu pro resetování hesla
                       try {
-                        await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-                        showPopupMessage('Password reset email sent to $email!');
+                        await FirebaseAuth.instance
+                            .sendPasswordResetEmail(email: email);
+                        showPopupMessage(
+                            'Password reset email sent to $email!');
                       } catch (e) {
                         showPopupMessage('Error: Unable to send reset email.');
                       }
                     },
-                    child: const Text('Submit'),
+                    child: const Text(
+                      'Submit',
+                      style: TextStyle(color: Color.fromRGBO(13, 101, 172, 1)),
+                    ),
                   ),
                 ],
               ),
@@ -263,7 +293,8 @@ class _SettingsPageState extends State<SettingsPage> {
           // Výběr oblíbeného týmu
           Flexible(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('teams').snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection('teams').snapshots(),
               builder: (context, snapshot) {
                 // Zobrazení načítání
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -304,6 +335,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                               ],
                             ),
+                            // Zobrazení loga týmu
                             child: ClipOval(
                               child: Image.network(
                                 teamLogo,

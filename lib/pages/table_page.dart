@@ -17,15 +17,15 @@ final databaseReference = FirebaseDatabase.instance.ref('table');
 class _TablePageState extends State<TablePage> {
   Color getRowColor(int placement) {
     if (placement <= 4) {
-      return Theme.of(context).colorScheme.primary;
+      return const Color.fromRGBO(24, 123, 205, 1);
     } else if (placement >= 5 && placement <= 12) {
-      return Theme.of(context).colorScheme.outline;
+      return const Color.fromARGB(255, 88, 163, 221);
     } else if (placement == 13) {
-      return Theme.of(context).colorScheme.tertiary;
+      return const Color.fromRGBO(208, 233, 255, 1);
     } else if (placement == 14) {
-      return const Color.fromARGB(255, 68, 24, 25);
+      return const Color.fromRGBO(220, 20, 60, 1);
     }
-    return const Color.fromARGB(255, 25, 24, 40); // Default color
+    return const Color.fromARGB(255, 25, 24, 40);
   }
 
 // vykreslení stránky s tabulkou
@@ -50,7 +50,7 @@ class _TablePageState extends State<TablePage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 image: const DecorationImage(
-                  image: AssetImage('lib/images/ehl2.jpg'), // Background image
+                  image: AssetImage('lib/images/ehl2.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -69,79 +69,80 @@ class _TablePageState extends State<TablePage> {
           ),
           // Header tabulka
           Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
+            padding:
+                const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
             child: Row(
               children: [
                 Expanded(
                   flex: 1,
-                  // vykreslení pořadí
-                  child: Text(
-                    "#",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: Text(
+                      "#",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
-                // vykreslení názvu týmu
                 Expanded(
                   flex: 4,
-                  child: Text(
-                    "Team",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: Text(
+                      "Team",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 40),
                 // vykreslení počtu zápasů
                 Expanded(
                   flex: 1,
-                  child: Text(
-                    "M",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 31),
+                    child: Text(
+                      "M",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 ),
-                // vykreslení počtu výher
+                // vykreslení skóre
                 Expanded(
-                  flex: 1,
-                  child: Text(
-                    "W",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 3),
+                    child: Text(
+                      "SCORE",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 ),
-                // vykreslení počtu proher
+                // vykreslení bodů
                 Expanded(
                   flex: 1,
                   child: Text(
-                    "L",
+                    "PTS",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.inversePrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                // vykreslení počtu bodů
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    "P",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
                     ),
                   ),
                 ),
@@ -152,7 +153,7 @@ class _TablePageState extends State<TablePage> {
           Divider(
             thickness: 1,
             height: 1,
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.outline,
           ),
 
           // Tabulka
@@ -204,10 +205,13 @@ class _TablePageState extends State<TablePage> {
                                 ),
                                 const SizedBox(width: 5),
                                 // název týmu
-                                Text(
-                                  snapshot.child("name").value.toString(),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: Text(
+                                    snapshot.child("name").value.toString(),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600),
+                                  ),
                                 ),
                               ],
                             ),
@@ -220,18 +224,11 @@ class _TablePageState extends State<TablePage> {
                               snapshot.child("matches").value.toString(),
                             ),
                           ),
-                          // počet výher
+                          // počet bodů
                           Expanded(
-                            flex: 1,
+                            flex: 2,
                             child: Text(
-                              snapshot.child("wins").value.toString(),
-                            ),
-                          ),
-                          // počet proher
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              snapshot.child("loses").value.toString(),
+                              snapshot.child("score").value.toString(),
                             ),
                           ),
                           // počet bodů
@@ -245,12 +242,6 @@ class _TablePageState extends State<TablePage> {
                           ),
                         ],
                       ),
-                    ),
-                    // oddělení
-                    Divider(
-                      thickness: 1,
-                      height: 1,
-                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ],
                 );

@@ -8,6 +8,7 @@ class ArchivePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // Logo v AppBaru
         title: Image.asset(
           'lib/images/ehl4.png',
           height: 55,
@@ -16,7 +17,7 @@ class ArchivePage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Header tabulka
+          // Hlavička tabulky
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
             child: Row(
@@ -57,6 +58,7 @@ class ArchivePage extends StatelessWidget {
           // Tabulka
           Expanded(
             child: StreamBuilder(
+              // Stream pro načítání dat z Firestore
               stream: FirebaseFirestore.instance
                   .collection('archive')
                   .orderBy('season', descending: true)
@@ -86,17 +88,17 @@ class ArchivePage extends StatelessWidget {
                                     flex: 1,
                                     child: Text(
                                       document['season'],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromRGBO(13, 101, 172, 1),
+                                      ),
                                     ),
                                   ),
                                   Expanded(
                                     flex: 1,
                                     child: Row(
                                       children: [
+                                        // Logo vítěze
                                         Image.network(
                                           document['logo'],
                                           height: 40,

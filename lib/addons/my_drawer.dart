@@ -106,54 +106,14 @@ class MyDrawer extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
               }
-              if (!snapshot.hasData || !snapshot.data!.exists) {
-                return Container(
-                  padding: const EdgeInsets.only(top: 70, left: 15),
-                  margin: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Image.asset(
-                          'lib/images/ehl4.png',
-                          width: 75,
-                          height: 75,
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'No Team',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Please select a team',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }
               // získání dat o uživateli
-              return FutureBuilder<DocumentSnapshot>(
-                future: FirebaseFirestore.instance
+              return StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance
                     .collection('users')
                     .doc(userId)
                     .collection('data')
                     .doc('nickname')
-                    .get(),
+                    .snapshots(),
                 builder: (context, userSnapshot) {
                   // pokud se načítají data
                   if (userSnapshot.connectionState == ConnectionState.waiting) {
@@ -169,7 +129,7 @@ class MyDrawer extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: Image.asset(
-                              'lib/images/ehl2.png',
+                              'lib/images/ehl4.png',
                               width: 75,
                               height: 75,
                             ),
@@ -178,7 +138,7 @@ class MyDrawer extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'No Nickname',
+                                'No nickname set',
                                 style: TextStyle(
                                   color: Theme.of(context)
                                       .colorScheme
@@ -206,11 +166,12 @@ class MyDrawer extends StatelessWidget {
                   // získání dat o uživateli
                   var userData =
                       userSnapshot.data!.data() as Map<String, dynamic>;
-                  String nickname = userData['nickname'] ?? 'No Nickname';
+                  String nickname = userData['nickname'] ?? 'No nickname set';
                   // získání dat o týmu
-                  var teamData = snapshot.data!.data() as Map<String, dynamic>;
-                  String teamLogo = teamData['logo'];
-                  String teamName = teamData['name'];
+                  var teamData =
+                      snapshot.data?.data() as Map<String, dynamic>? ?? {};
+                  String teamLogo = teamData['logo'] ?? 'lib/images/ehl4.png';
+                  String teamName = teamData['name'] ?? 'Please select a team';
                   // vytvoření loga týmu a přezdívky uživatele
                   return Container(
                     padding: const EdgeInsets.only(top: 70, left: 15),
@@ -226,7 +187,7 @@ class MyDrawer extends StatelessWidget {
                             // pokud se logo nenačte
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
-                                'lib/images/ehl2.png',
+                                'lib/images/ehl4.png',
                                 width: 75,
                                 height: 75,
                               );
@@ -243,15 +204,15 @@ class MyDrawer extends StatelessWidget {
                                 color: Theme.of(context)
                                     .colorScheme
                                     .inversePrimary,
-                                fontSize: 17,
+                                fontSize: 18,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               teamName,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
+                              style: const TextStyle(
+                                color: Color.fromRGBO(13, 101, 172, 1),
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -297,8 +258,23 @@ class MyDrawer extends StatelessWidget {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const TablePage(),
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const TablePage(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
+
+                    var tween = Tween(begin: begin, end: end)
+                        .chain(CurveTween(curve: curve));
+
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
                 ),
               );
             },
@@ -310,8 +286,23 @@ class MyDrawer extends StatelessWidget {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const ArchivePage(),
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const ArchivePage(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
+
+                    var tween = Tween(begin: begin, end: end)
+                        .chain(CurveTween(curve: curve));
+
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
                 ),
               );
             },
@@ -324,8 +315,23 @@ class MyDrawer extends StatelessWidget {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingsPage(),
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const SettingsPage(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
+
+                    var tween = Tween(begin: begin, end: end)
+                        .chain(CurveTween(curve: curve));
+
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
                 ),
               );
             },

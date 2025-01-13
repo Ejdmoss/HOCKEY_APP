@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:hockey_app/addons/my_button.dart';
 import 'package:hockey_app/addons/my_textfield.dart';
 import 'package:hockey_app/sevices/auth/auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hockey_app/themes/dark_mode.dart';
 
 class RegisterPage extends StatefulWidget {
-  // Funkce, která se zavolá při kliknutí na odkaz pro registraci.
+  // Funkce spuštěná při kliknutí na odkaz pro přihlášení.
   final void Function()? onTap;
 
   const RegisterPage({super.key, required this.onTap});
@@ -15,7 +17,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // Řídící objekty pro textová pole pro email a heslo.
+  // Ovladače pro textová pole e-mailu a hesla.
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -23,20 +25,61 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void register() async {
     final authService = AuthService();
-    // Kontrola, zda se hesla shodují.
-    if (passwordController.text == confirmPasswordController.text) {
+    final email = emailController.text;
+    final password = passwordController.text;
+    final confirmPassword = confirmPasswordController.text;
+
+    // Kontrola formátu e-mailu
+    if (!email.contains('@') || !email.contains('.')) {
+      showDialog(
+        context: context,
+        builder: (context) => const AlertDialog(
+          title: Text("Invalid Email Format"),
+          content: Text("Email must have be in format xxx@xxx.xx"),
+        ),
+      );
+      return;
+    }
+
+    // Kontrola délky hesla a velkého písmena
+    if (password.length < 8 || !password.contains(RegExp(r'[A-Z]'))) {
+      showDialog(
+        context: context,
+        builder: (context) => const AlertDialog(
+          title: Text("Wrong password format!"),
+          content: Text(
+              "Password must be at least 8 characters long and contain at least one uppercase letter."),
+        ),
+      );
+      return;
+    }
+    // Kontrola shody hesel
+    if (password == confirmPassword) {
       try {
-        await authService.signUpWithEmailAndPassword(
-            emailController.text, passwordController.text);
+        final userCredential = await authService.signUpWithEmailAndPassword(
+          email,
+          password,
+        );
+
+        // Nastavení role uživatele na "user"
+        final uid = userCredential.user?.uid;
+        if (uid != null) {
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .collection('data')
+              .doc('roles')
+              .set({'role': 'user'});
+        }
       } catch (e) {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(e.toString()),
+            title: const Text("Registration Error"),
+            content: Text(e.toString()),
           ),
         );
       }
-      // Pokud je registrace úspěšná, zavře se dialog a uživatel je přesměrován na přihlašovací stránku.
     } else {
       showDialog(
         context: context,
@@ -48,79 +91,89 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   @override
+  // Vykreslení stránky
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Nastavujeme pozadí stránky podle aktuálního tématu.
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Stack(
-        children: [
-          // Pozadí stránky
-          Opacity(
-            opacity: 1,
-            child: Image.asset(
-              'lib/images/pozadi.jpg',
-              width: double.infinity,
-              height: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 75.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Pole pro zadání emailu.
-                  MyTexfield(
-                      controller: emailController,
-                      hintText: "Email",
-                      obscureText: false),
-                  const SizedBox(height: 10),
-                  // Pole pro zadání hesla.
-                  MyTexfield(
-                      controller: passwordController,
-                      hintText: "Password",
-                      obscureText: true),
-                  const SizedBox(height: 10),
-                  // Pole pro zadání kontrolního hesla.
-                  MyTexfield(
-                      controller: confirmPasswordController,
-                      hintText: "Confirm password",
-                      obscureText: true),
-                  const SizedBox(height: 25),
-                  // Tlačítko pro zaregistrování.
-                  MyButton(text: "Sign Up", onTap: register),
-                  const SizedBox(height: 25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Already have an account?",
-                        style: TextStyle(
-                            color:
-                                Theme.of(context).colorScheme.inversePrimary),
-                      ),
-                      const SizedBox(width: 4),
-                      // Odkaz pro přihlášení, který spustí funkci onTap.
-                      GestureDetector(
-                        onTap: widget.onTap,
-                        child: Text(
-                          "Login now",
-                          style: TextStyle(
-                              color:
-                                  Theme.of(context).colorScheme.inversePrimary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+    return Theme(
+      data: darkMode,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: Stack(
+          children: [
+            // Pozadí obrázku
+            Opacity(
+              opacity: 1,
+              child: Image.asset(
+                'lib/images/pozadi.jpg',
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
               ),
             ),
-          ),
-        ],
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 75.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Vstupní pole pro e-mail
+                    MyTexfield(
+                      controller: emailController,
+                      hintText: "Email",
+                      obscureText: false,
+                    ),
+                    const SizedBox(height: 10),
+                    // Vstupní pole pro heslo
+                    MyTexfield(
+                      controller: passwordController,
+                      hintText: "Password",
+                      obscureText: true,
+                    ),
+                    const SizedBox(height: 10),
+                    // Vstupní pole pro potvrzení hesla
+                    MyTexfield(
+                      controller: confirmPasswordController,
+                      hintText: "Confirm password",
+                      obscureText: true,
+                    ),
+                    const SizedBox(height: 25),
+                    // Tlačítko pro registraci
+                    MyButton(
+                      text: "Sign Up",
+                      onTap: register,
+                    ),
+                    const SizedBox(height: 25),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Already have an account?",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        // Odkaz na přihlašovací stránku
+                        GestureDetector(
+                          onTap: widget.onTap,
+                          child: const Text(
+                            "Login now",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

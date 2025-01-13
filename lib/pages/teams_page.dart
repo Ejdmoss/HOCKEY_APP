@@ -30,12 +30,18 @@ class _TeamsPageState extends State<TeamsPage> {
       }
     }
   }
+
   // metoda pro zjištění, zda je tým v oblíbených
   Future<bool> _isFavorite(String teamName) async {
     if (user != null) {
-      DocumentSnapshot userDoc = await firestore.collection('users').doc(user!.uid).get();
-      List<dynamic> favoriteTeams = userDoc.get('favouriteTeams') ?? [];
-      return favoriteTeams.contains(teamName);
+      try {
+        DocumentSnapshot userDoc =
+            await firestore.collection('users').doc(user!.uid).get();
+        List<dynamic> favoriteTeams = userDoc.get('favouriteTeams') ?? [];
+        return favoriteTeams.contains(teamName);
+      } catch (e) {
+        return false;
+      }
     }
     return false;
   }
@@ -109,7 +115,9 @@ class _TeamsPageState extends State<TeamsPage> {
                             trailing: IconButton(
                               icon: Icon(
                                 isFavorite ? Icons.star : Icons.star_border,
-                                color: isFavorite ? Colors.yellow : null,
+                                color: isFavorite
+                                    ? const Color.fromRGBO(255, 165, 0, 1.0)
+                                    : null,
                               ),
                               onPressed: () {
                                 _toggleFavorite(teamName, isFavorite);

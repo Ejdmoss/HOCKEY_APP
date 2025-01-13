@@ -57,17 +57,17 @@ class LineupTabContentPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildSectionHeader('Goalkeepers', const Color.fromARGB(255, 0, 88, 159)),
+                          _buildSectionHeader('Goalkeepers', const Color.fromARGB(255, 0, 159, 227)),
                           const SizedBox(height: 10), 
                           _buildPlayerCards(goalkeepers, context),
                           const SizedBox(height: 20),
 
-                          _buildSectionHeader('Defenders', const Color.fromARGB(255, 0, 128, 1)),
+                          _buildSectionHeader('Defenders', const Color.fromARGB(255, 34, 139, 34)),
                           const SizedBox(height: 10),
                           _buildPlayerCards(defenders, context),
                           const SizedBox(height: 20),
 
-                          _buildSectionHeader('Attackers', const Color.fromARGB(255, 149, 6, 6)),
+                          _buildSectionHeader('Attackers', const Color.fromARGB(255, 220, 20, 60)),
                           const SizedBox(height: 10),
                           _buildPlayerCards(attackers, context),
                         ],
@@ -83,6 +83,7 @@ class LineupTabContentPage extends StatelessWidget {
     );
   }
 
+  // Metoda pro vytvoření záhlaví sekce
   Widget _buildSectionHeader(String title, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -100,6 +101,7 @@ class LineupTabContentPage extends StatelessWidget {
     );
   }
 
+  // Metoda pro vytvoření karet hráčů
   Widget _buildPlayerCards(List<QueryDocumentSnapshot> players, BuildContext context) {
     return Column(
       children: players.map((player) {
@@ -110,14 +112,15 @@ class LineupTabContentPage extends StatelessWidget {
               radius: 22,
               backgroundImage: NetworkImage(player['pic']),
               onBackgroundImageError: (error, stackTrace) {
+                // Zpracování chyby při načítání obrázku
               },
             ),
             title: Text(
               player['name'],
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 19,
-                color: Theme.of(context).colorScheme.primary,
+                color: Color.fromRGBO(13, 101, 172, 1),
               ),
             ),
             subtitle: Text('Age: ${player['age']} | Games: ${player['games']}'),

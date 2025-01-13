@@ -16,6 +16,7 @@ class _FillDataPageState extends State<FillDataPage> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _team1ScoreController = TextEditingController();
   final TextEditingController _team2ScoreController = TextEditingController();
+  final TextEditingController _rController = TextEditingController();
   String? _selectedTeam1;
   String? _selectedTeam2;
   List<String> _teamNames = [];
@@ -62,6 +63,7 @@ class _FillDataPageState extends State<FillDataPage> {
         'team2name': _selectedTeam2,
         'team2score': _team2ScoreController.text,
         'team2logo': team2Logo,
+        'r': _rController.text,
       });
 
       // Zobrazení zprávy o úspěšném uložení dat
@@ -73,6 +75,7 @@ class _FillDataPageState extends State<FillDataPage> {
       _dateController.clear();
       _team1ScoreController.clear();
       _team2ScoreController.clear();
+      _rController.clear();
       setState(() {
         _selectedTeam1 = null;
         _selectedTeam2 = null;
@@ -94,8 +97,11 @@ class _FillDataPageState extends State<FillDataPage> {
 
     return Scaffold(
       appBar: AppBar(
-        // Název stránky
-        title: const Text('Fill Data'),
+        title: Image.asset(
+          'lib/images/ehl4.png',
+          height: 55,
+        ),
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -111,6 +117,13 @@ class _FillDataPageState extends State<FillDataPage> {
                     obscureText: false,
                   ),
                   const SizedBox(height: 16),
+                  // Vstupní pole pro zadání hodnoty R
+                  MyTexfield(
+                    controller: _rController,
+                    hintText: 'R',
+                    obscureText: false,
+                  ),
+                  const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
                     value: _selectedTeam1,
                     hint: const Text('Select Team 1'),
@@ -121,6 +134,7 @@ class _FillDataPageState extends State<FillDataPage> {
                       );
                     }).toList(),
                     onChanged: (newValue) {
+                      // Nastavení hodnoty pro vybraný tým
                       setState(() {
                         _selectedTeam1 = newValue;
                       });
@@ -130,16 +144,11 @@ class _FillDataPageState extends State<FillDataPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Theme.of(context).colorScheme.surface,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  MyTexfield(
-                    controller: _team1ScoreController,
-                    hintText: 'Team 1 Score',
-                    obscureText: false,
-                  ),
-                  const SizedBox(height: 16),
+                  // Dropdown pro výběr týmu 2
                   DropdownButtonFormField<String>(
                     value: _selectedTeam2,
                     hint: const Text('Select Team 2'),
@@ -154,19 +163,64 @@ class _FillDataPageState extends State<FillDataPage> {
                         _selectedTeam2 = newValue;
                       });
                     },
+                    // Nastavení vzhledu DropdownButton
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Theme.of(context).colorScheme.surface,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  MyTexfield(
-                    controller: _team2ScoreController,
-                    hintText: 'Team 2 Score',
-                    obscureText: false,
+                  // Dropdown pro výběr skóre týmu 1
+                  DropdownButtonFormField<int>(
+                    value: int.tryParse(_team1ScoreController.text),
+                    hint: const Text('Team 1 Score'),
+                    items: List.generate(10, (index) => index).map((int value) {
+                      return DropdownMenuItem<int>(
+                        value: value,
+                        child: Text(value.toString()),
+                      );
+                    }).toList(),
+                    // Nastavení akce při změně hodnoty
+                    onChanged: (newValue) {
+                      setState(() {
+                        _team1ScoreController.text = newValue.toString();
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surface,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Dropdown pro výběr skóre týmu 2
+                  DropdownButtonFormField<int>(
+                    value: int.tryParse(_team2ScoreController.text),
+                    hint: const Text('Team 2 Score'),
+                    items: List.generate(10, (index) => index).map((int value) {
+                      return DropdownMenuItem<int>(
+                        value: value,
+                        child: Text(value.toString()),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      // Nastavení hodnoty pro skóre týmu 2
+                      setState(() {
+                        _team2ScoreController.text = newValue.toString();
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surface,
+                    ),
                   ),
                   const SizedBox(height: 32),
                   ElevatedButton(
@@ -177,9 +231,13 @@ class _FillDataPageState extends State<FillDataPage> {
                       textStyle: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(0, 101, 172, 1),
                       ),
                     ),
-                    child: const Text('Save Data'),
+                    child: const Text(
+                      'Save Data',
+                      style: TextStyle(color: Color.fromRGBO(0, 101, 172, 1)),
+                    ),
                   ),
                 ],
               ),

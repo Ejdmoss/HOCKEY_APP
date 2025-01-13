@@ -9,6 +9,7 @@ class LandingPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
+          // Nastavení obrázku na pozadí
           image: DecorationImage(
             image: AssetImage('lib/images/plocha.png'),
             fit: BoxFit.cover,
@@ -20,6 +21,7 @@ class LandingPage extends StatelessWidget {
             children: <Widget>[
               const SizedBox(height: 550),
               const Text(
+                // Text uvítání
                 'Welcome to Hockey App',
                 style: TextStyle(
                   fontSize: 28,
@@ -29,8 +31,8 @@ class LandingPage extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: const Color.fromRGBO(204, 204, 204, 1),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  backgroundColor: const Color.fromRGBO(0, 101, 172, 1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
@@ -38,11 +40,13 @@ class LandingPage extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 ),
                 onPressed: () {
+                  // Navigace na AuthGate stránku
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const AuthGate()),
                   );
                 },
+                // Text tlačítka
                 child: const Text('Get Started'),
               ),
             ],

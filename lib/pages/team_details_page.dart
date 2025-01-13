@@ -37,7 +37,7 @@ class _TeamDetailsPageState extends State<TeamDetailsPage> {
               image: DecorationImage(
                 image: AssetImage(
                   Theme.of(context).brightness == Brightness.light
-                      ? 'lib/images/orange.jpg'
+                      ? 'lib/images/gradient.jpeg'
                       : 'lib/images/gradient.jpeg',
                 ),
                 fit: BoxFit.cover,

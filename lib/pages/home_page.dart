@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
   void updateMonth(int index) {
     setState(() {
       selectedMonthIndex = index;
-      int year = (index >= 8) ? 2025 : 2026; //na základě vybraného měsíce se určí rok
+      int year = (index >= 8) ? 2024 : 2025;
       selectedDate = DateTime(year, index + 1, 1);
     });
   }
@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
                         color: date.isAtSameMomentAs(selectedDate)
-                            ? Theme.of(context).colorScheme.primary
+                            ? const Color.fromRGBO(0, 101, 172, 1)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                             DateFormat('EEE').format(date),
                             style: TextStyle(
                               color: date.isAtSameMomentAs(selectedDate)
-                                  ? Theme.of(context).colorScheme.inversePrimary
+                                  ? Colors.white
                                   : Theme.of(context)
                                       .colorScheme
                                       .inversePrimary,
@@ -177,22 +177,12 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: date.isAtSameMomentAs(selectedDate)
-                                  ? Theme.of(context).colorScheme.inversePrimary
+                                  ? Colors.white
                                   : Theme.of(context)
                                       .colorScheme
                                       .inversePrimary,
                             ),
                           ),
-                          if (date.month == 9 && date.day == 17)
-                            Text(
-                              "START OF THE SEASON",
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
                         ],
                       ),
                     ),
@@ -213,8 +203,33 @@ class _HomePageState extends State<HomePage> {
                 }
                 // zobrazení zprávy, pokud nejsou k dispozici žádné zápasy
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                      child: Text('No games available for this date.'));
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (selectedDate.month == 9 && selectedDate.day == 17)
+                        Text(
+                          "START OF THE SEASON 2024/2025",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      if (selectedDate.month == 3 && selectedDate.day == 4)
+                        Text(
+                          "END OF THE SEASON 2024/2025",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      const SizedBox(height: 10),
+                      const Center(child: Text('No games available for this date.')),
+                    ],
+                  );
                 }
                 // zobrazení seznamu zápasů
                 return ListView(
@@ -267,24 +282,22 @@ class _HomePageState extends State<HomePage> {
                                       Text(
                                         doc["team1score"].toString(),
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 17,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          color: Color.fromRGBO(0, 101, 172, 1)
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 const SizedBox(width: 2),
-                                Text('-',
+                                const Text('-',
                                     style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                       color:
-                                          Theme.of(context).colorScheme.primary,
+                                          Color.fromRGBO(0, 101, 172, 1),
                                     )),
                                 const SizedBox(width: 2),
                                 Expanded(
@@ -295,12 +308,10 @@ class _HomePageState extends State<HomePage> {
                                       Text(
                                         doc["team2score"].toString(),
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 17,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          color: Color.fromRGBO(0, 101, 172, 1)
                                         ),
                                       ),
                                       const SizedBox(width: 5),
