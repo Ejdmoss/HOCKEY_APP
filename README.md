@@ -4,6 +4,9 @@
 [![Framework](https://img.shields.io/badge/Framework-dart-blue)](https://dart.dev/)
 [![Database](https://img.shields.io/badge/Database-FireBase-orange)](https://firebase.google.com/)
 
+# ODKAZ NA VIDEO NA YT
+https://www.youtube.com/watch?v=rYDuJjNhtFI
+
 # Aplikace pro sledování ledního hokeje
 Tato aplikace je navržena pro fanoušky ledního hokeje, kteří chtějí sledovat výsledky, tabulky týmů, soupisky a další důležité informace o své oblíbené lize a týmech. Umožňuje uživatelům prohlížet aktuální výsledky, soupisky týmů a detaily jednotlivých hráčů. Je ideální jak pro fanoušky, tak pro ty, kteří chtějí mít přehled o své oblíbené hokejové lize.
 
